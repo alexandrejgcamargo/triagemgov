@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriagemGov — três problemas por vez</title>
+<meta name="description" content="Três problemas para resolver e dar alta da mesa e da sua cabeça. Priorização de tarefas com a lógica da triagem hospitalar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#EAF4F2; --papel-2:#F5FAF9; --carta:#FFFFFF;
+  --tinta:#0F2C31; --tinta-fraca:#5B7A7E; --tinta-tenue:#95AFB1; --linha:#D5E8E4;
+  --acento:#0E9E96; --acento-claro:#D3F0EC;
+  --areia:#E8D5B7; --pele:#F3D9C0; --avental:#DDEEEB;
+  --vermelho:#E05243; --vermelho-txt:#B4342A; --vermelho-bg:#FDECEA;
+  --amarelo:#F0A81E;  --amarelo-txt:#8A6006;  --amarelo-bg:#FDF3DF;
+  --verde:#2FAE73;    --verde-txt:#187A4E;    --verde-bg:#E4F6EC;
+  --preto:#6A7C80;    --preto-txt:#4A5A5E;    --preto-bg:#EDF2F2;
+  --r-g:22px; --r-m:14px; --r-p:999px;
+  --sombra:0 2px 4px rgba(15,44,49,.04), 0 10px 24px rgba(15,44,49,.06);
+  --gap:clamp(16px,3vw,26px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:Outfit,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:18px;line-height:1.5;padding:var(--gap) var(--gap) 60px}
+.wrap{max-width:900px;margin:0 auto}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.015em;line-height:1.15}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg{display:block}
+
+/* cabeçalho */
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.logo{width:46px;height:46px;flex:none}
+.marca .titulo{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.marca h1{font-size:clamp(42px,8.5vw,62px)}
+.bandeira{width:60px;height:42px;flex:none;border-radius:5px;overflow:hidden;box-shadow:0 1px 3px rgba(15,44,49,.2)}
+.marca p{font-size:17px;color:var(--tinta-fraca);margin-top:4px;max-width:46ch}
+.nav{margin-left:auto}
+.link-topo{display:inline-flex;align-items:center;gap:7px;border-radius:var(--r-p);padding:9px 16px;background:var(--carta);color:var(--tinta);font-size:15.5px;font-weight:600;box-shadow:var(--sombra);text-decoration:none}
+.link-topo:hover{background:var(--acento-claro)}
+
+/* blocos */
+.bloco{background:var(--carta);border-radius:var(--r-g);padding:clamp(18px,3.4vw,26px);box-shadow:var(--sombra);margin-top:20px}
+.cab{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.cab h2{font-size:clamp(23px,4vw,29px)}
+.cab .icone{width:38px;height:38px;border-radius:var(--r-p);flex:none;background:var(--acento-claro);display:grid;place-items:center}
+.cab .cont{margin-left:auto;font-size:14.5px;font-weight:600;color:var(--tinta-fraca);background:var(--papel-2);border-radius:var(--r-p);padding:6px 14px;white-space:nowrap}
+.sub{font-size:16px;color:var(--tinta-fraca);margin:0 0 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sub b{color:var(--tinta);font-weight:600}
+.troca-musica{width:38px;height:38px;border-radius:var(--r-p);background:var(--papel-2);border:1px solid var(--linha);display:grid;place-items:center;flex:none}
+.troca-musica:hover{background:var(--acento-claro)}
+
+/* UTI */
+.leitos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.leito{border-radius:var(--r-m);padding:14px;display:flex;flex-direction:column;gap:10px;min-height:200px;border:2px solid var(--linha);background:var(--papel-2);transition:transform .15s}
+.leito.ocupado{background:var(--carta);box-shadow:var(--sombra)}
+.leito.ocupado:hover{transform:translateY(-2px)}
+.leito.v{border-color:var(--vermelho)} .leito.a{border-color:var(--amarelo)}
+.leito.g{border-color:var(--verde)} .leito.p{border-color:var(--preto)}
+.leito.livre{border-style:dashed;align-items:center;justify-content:center;text-align:center}
+.leito .mesa{width:100%;max-width:160px;margin:0 auto}
+.leito .txt{font-size:16px;font-weight:500;line-height:1.35;flex:1}
+.leito .rod{display:flex;gap:6px;flex-wrap:wrap}
+.leito.livre .rotulo{font-size:15.5px;font-weight:600;color:var(--tinta-fraca)}
+.leito.livre .dica{font-size:14px;color:var(--tinta-tenue);margin-top:2px}
+
+/* pílulas e botões */
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-p);padding:4px 11px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.pill .pt{width:8px;height:8px;border-radius:50%;flex:none}
+.pill.v{background:var(--vermelho-bg);color:var(--vermelho-txt)} .pill.v .pt{background:var(--vermelho)}
+.pill.a{background:var(--amarelo-bg);color:var(--amarelo-txt)} .pill.a .pt{background:var(--amarelo)}
+.pill.g{background:var(--verde-bg);color:var(--verde-txt)} .pill.g .pt{background:var(--verde)}
+.pill.p{background:var(--preto-bg);color:var(--preto-txt)} .pill.p .pt{background:var(--preto)}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-p);padding:11px 20px;font-weight:600;font-size:17px;transition:transform .12s,background .12s}
+.btn:active{transform:scale(.97)}
+.btn-acento{background:var(--acento);color:#fff}
+.btn-acento:hover{background:#0B8A83}
+.mini{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-p);padding:7px 13px;font-size:14.5px;font-weight:600;color:var(--tinta-fraca);background:var(--papel-2);border:1px solid var(--linha);transition:background .12s,color .12s}
+.mini:hover{background:var(--acento-claro);color:var(--tinta);border-color:var(--acento-claro)}
+.mini.destaque{background:var(--acento-claro);color:#0A6A65;border-color:transparent}
+
+/* entrada */
+.entrada{display:flex;gap:10px;flex-wrap:wrap}
+input[type=text]{flex:1;min-width:220px;font:inherit;font-size:17.5px;color:var(--tinta);background:var(--papel-2);border:2px solid var(--linha);border-radius:var(--r-p);padding:12px 20px}
+input[type=text]::placeholder{color:var(--tinta-tenue)}
+input[type=text]:focus{border-color:var(--acento);outline:none;background:var(--carta)}
+
+/* menu suspenso de cores */
+.menu{position:fixed;z-index:60;background:var(--carta);border-radius:var(--r-m);box-shadow:0 6px 14px rgba(15,44,49,.12),0 20px 44px rgba(15,44,49,.16);padding:8px;width:min(340px,calc(100vw - 32px));display:none}
+.menu.aberto{display:block}
+.menu .cabecalho{font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-tenue);padding:6px 10px 8px}
+.opcao{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;padding:10px 11px;border-radius:10px;transition:background .12s}
+.opcao:hover{background:var(--papel-2)}
+.opcao .pt{width:13px;height:13px;border-radius:50%;flex:none;margin-top:4px}
+.opcao .nome{font-weight:700;font-size:16px;display:block}
+.opcao .desc{font-size:14.5px;color:var(--tinta-fraca);line-height:1.35;display:block}
+.opcao.v .nome{color:var(--vermelho-txt)} .opcao.a .nome{color:var(--amarelo-txt)}
+.opcao.g .nome{color:var(--verde-txt)} .opcao.p .nome{color:var(--preto-txt)}
+
+/* alerta */
+.alerta{display:flex;gap:12px;align-items:flex-start;background:var(--vermelho-bg);border-radius:var(--r-m);padding:14px 16px;margin-bottom:14px;font-size:16px;line-height:1.45;color:var(--vermelho-txt)}
+.alerta svg{flex:none;margin-top:2px}
+
+/* sala de espera */
+.cena{width:100%;height:auto;margin:2px 0 16px;border-radius:var(--r-m)}
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-p);padding:8px 15px;font-size:15px;font-weight:600;background:var(--papel-2);border:1px solid var(--linha);color:var(--tinta-fraca)}
+.chip:hover{border-color:var(--acento)}
+.chip[aria-pressed="true"]{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.chip .pt{width:9px;height:9px;border-radius:50%;flex:none}
+.chip .n{opacity:.7;font-variant-numeric:tabular-nums}
+.lista{list-style:none;display:flex;flex-direction:column;gap:9px}
+.card{display:flex;align-items:center;gap:13px;flex-wrap:wrap;background:var(--papel-2);border-radius:var(--r-m);padding:13px 16px;border-left:6px solid var(--linha)}
+.card.v{border-left-color:var(--vermelho)} .card.a{border-left-color:var(--amarelo)}
+.card.g{border-left-color:var(--verde)} .card.p{border-left-color:var(--preto)}
+.card .corpo{flex:1;min-width:180px;font-size:17px;line-height:1.35}
+.card.p .corpo{color:var(--tinta-fraca)}
+.card .acoes{display:flex;gap:6px;flex-wrap:wrap}
+.nada{text-align:center;padding:26px 10px;color:var(--tinta-fraca);font-size:17px;line-height:1.5}
+.nada b{color:var(--tinta)}
+
+/* altas */
+.altas .item{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 0;border-bottom:1px dashed var(--linha);font-size:16px}
+.altas .item:last-child{border-bottom:0}
+.altas .quando{margin-left:auto;font-size:14px;color:var(--tinta-tenue);white-space:nowrap}
+.altas .texto{flex:1;min-width:160px;color:var(--tinta-fraca)}
+.abrir-altas{display:inline-flex;align-items:center;gap:9px;border-radius:var(--r-p);padding:9px 16px;font-size:15.5px;font-weight:600;background:var(--papel-2);border:1px solid var(--linha);color:var(--tinta-fraca)}
+.abrir-altas:hover{background:var(--acento-claro);color:var(--tinta)}
+.abrir-altas .seta{transition:transform .18s}
+.abrir-altas[aria-expanded="true"] .seta{transform:rotate(180deg)}
+
+/* sobre */
+.sobre h3{font-size:19px;margin:22px 0 6px}
+.sobre p{font-size:17px;color:var(--tinta-fraca);line-height:1.6}
+.sobre p b{color:var(--tinta)}
+.sobre a{color:var(--acento);text-decoration:underline;text-underline-offset:2px}
+.passos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:14px}
+.passo{background:var(--papel-2);border-radius:var(--r-m);padding:16px}
+.passo .n{width:28px;height:28px;border-radius:50%;background:var(--acento);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15.5px;margin-bottom:9px}
+.passo b{display:block;font-size:17px;margin-bottom:3px}
+.passo span{font-size:15.5px;color:var(--tinta-fraca);line-height:1.45}
+
+footer{margin-top:24px;padding:18px 4px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;font-size:14.5px;color:var(--tinta-fraca)}
+footer .acoes{display:flex;gap:8px;flex-wrap:wrap}
+.aviso{background:var(--amarelo-bg);color:var(--amarelo-txt);border-radius:var(--r-m);padding:12px 16px;font-size:15.5px;margin-top:16px}
+
+/* faixa de backup */
+.faixa-backup{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--acento-claro);border-radius:var(--r-m);padding:14px 16px;margin-top:16px;font-size:16px;line-height:1.45;color:#0A6A65}
+.faixa-backup svg{flex:none}
+.faixa-backup .txt{flex:1;min-width:200px}
+.faixa-backup .btns{display:flex;gap:8px;flex-wrap:wrap}
+.faixa-backup .b{border-radius:var(--r-p);padding:9px 16px;font-size:15px;font-weight:600}
+.faixa-backup .b1{background:var(--acento);color:#fff}
+.faixa-backup .b2{background:rgba(10,106,101,.12);color:#0A6A65}
+
+/* aviso de re-triagem */
+.aviso-ontem{display:flex;gap:12px;align-items:flex-start;background:var(--amarelo-bg);border-radius:var(--r-m);padding:14px 16px;margin-bottom:14px;font-size:16px;line-height:1.45;color:var(--amarelo-txt)}
+.aviso-ontem svg{flex:none;margin-top:2px}
+.aviso-ontem .fechar{margin-left:auto;flex:none;border-radius:var(--r-p);padding:6px 12px;font-size:14.5px;font-weight:600;background:rgba(138,96,6,.12);color:var(--amarelo-txt)}
+.aviso-ontem .fechar:hover{background:rgba(138,96,6,.2)}
+
+/* grupos por cor */
+.grupo-cab{display:flex;align-items:center;gap:10px;margin:16px 0 8px;font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tinta-fraca)}
+.grupo-cab:first-child{margin-top:0}
+.grupo-cab .pt{width:10px;height:10px;border-radius:50%;flex:none}
+.grupo-cab .risca{flex:1;height:1px;background:var(--linha)}
+.grupo-cab .qtd{font-variant-numeric:tabular-nums;color:var(--tinta-tenue)}
+
+/* edição inline */
+.editando{display:flex;gap:8px;flex:1;min-width:200px;flex-wrap:wrap}
+.editando input{flex:1;min-width:180px;font:inherit;font-size:17px;padding:10px 16px;border-radius:var(--r-p);border:2px solid var(--acento);background:var(--carta);color:var(--tinta)}
+.leito .editando{flex-direction:column}
+.leito .editando input{width:100%;font-size:15.5px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:80;background:rgba(15,44,49,.45);display:grid;place-items:center;padding:20px}
+.modal[hidden]{display:none}
+.modal-caixa{background:var(--carta);border-radius:var(--r-g);padding:26px;max-width:400px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(15,44,49,.3)}
+.modal-caixa svg{width:100%;max-width:200px;margin:0 auto 14px}
+.modal-caixa h3{font-size:23.5px;margin-bottom:8px}
+.modal-caixa p{font-size:17px;color:var(--tinta-fraca);line-height:1.5;margin-bottom:18px}
+
+@keyframes pensar{0%{opacity:0;transform:translateY(4px) scale(.85)}30%{opacity:.85}100%{opacity:0;transform:translateY(-7px) scale(1.12)}}
+.pensa{animation:pensar 3.8s ease-in-out infinite}
+.pensa.p2{animation-delay:1.25s}
+.pensa.p3{animation-delay:2.5s}
+@keyframes vapor{0%{opacity:0;transform:translateY(3px)}35%{opacity:.65}100%{opacity:0;transform:translateY(-10px)}}
+.vapor{animation:vapor 3.6s ease-in-out infinite}
+.vapor:nth-of-type(2){animation-delay:1.2s}
+.vapor:nth-of-type(3){animation-delay:2.4s}
+@keyframes brota{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card,.leito.ocupado{animation:brota .22s ease both}
+
+@media (max-width:640px){
+  .leitos{grid-template-columns:1fr}
+  .leito{min-height:auto}
+  .leito .mesa{max-width:140px}
+  .nav{width:100%;margin-left:0}
+  .mini{padding:11px 15px;font-size:15px}
+  .troca-musica{width:44px;height:44px}
+  .chip{padding:10px 16px}
+  .cab .cont{margin-left:0;order:3;width:100%;text-align:center}
+  .aviso-ontem{flex-wrap:wrap}
+  .aviso-ontem .fechar{margin-left:0;width:100%;text-align:center;padding:10px 12px}
+  .faixa-backup .btns{width:100%}
+  .faixa-backup .b{flex:1;text-align:center}
+  .aviso-ontem .fechar{padding:11px 16px}
+  .faixa-backup .b{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="marca">
+      <div class="titulo">
+        <h1>TriagemGov</h1>
+        <svg class="bandeira" viewBox="0 0 60 42" role="img" aria-label="Bandeira do Brasil">
+          <rect width="60" height="42" fill="#2FAE73"/>
+          <path d="M30 5.5 55 21 30 36.5 5 21z" fill="#F0A81E"/>
+          <circle cx="30" cy="21" r="9.5" fill="#2B5FA8"/>
+          <path d="M20.9 18.4a24 24 0 0 1 18.2 4.5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p>Três problemas para resolver e dar alta da mesa e da sua cabeça.</p>
+    </div>
+    <nav class="nav">
+      <a class="link-topo" href="#sobre">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v6"/><path d="M12 7.6v.1"/></svg>
+        Sobre
+      </a>
+    </nav>
+  </header>
+
+  <div id="aviso-storage" class="aviso" hidden>
+    Este navegador não está guardando nada. Dá para usar normalmente, mas ao recarregar a página tudo volta ao exemplo.
+  </div>
+
+  <div id="faixa-backup"></div>
+  <section class="bloco" aria-labelledby="h-uti">
+    <div class="cab">
+      <span class="icone" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E9E96" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V8"/><path d="M3 12h16a2 2 0 0 1 2 2v4"/><circle cx="8" cy="9" r="2"/></svg>
+      </span>
+      <h2 id="h-uti">Tarefas na UTI</h2>
+      <span class="cont" id="cont-uti"></span>
+    </div>
+    <p class="sub"><span>Três problemas por vez, nem um a mais. É o que você <b>REALMENTE</b> vai fazer hoje.</span></p>
+    <div id="aviso-ontem"></div>
+    <div class="leitos" id="leitos"></div>
+  </section>
+
+  <!-- RECEPÇÃO -->
+  <section class="bloco" aria-labelledby="h-nova">
+    <div class="cab">
+      <span class="icone" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E9E96" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </span>
+      <h2 id="h-nova">Opa, chegou nova tarefa na recepção!</h2>
+    </div>
+    <p class="sub">Inclua aqui sua tarefa para a triagem.</p>
+    <div class="entrada">
+      <label class="sr" for="campo">Descreva a demanda</label>
+      <input type="text" id="campo" placeholder="Ex.: revisar a nota técnica antes do prazo" autocomplete="off">
+      <button class="btn btn-acento" id="btn-triar" aria-haspopup="menu" aria-expanded="false">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 5h16"/><path d="M7 12h10"/><path d="M10 19h4"/></svg>
+        Triar
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5 12 15.5 18 9.5"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- SALA DE ESPERA -->
+  <section class="bloco" aria-labelledby="h-espera">
+    <div class="cab">
+      <span class="icone" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E9E96" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+      </span>
+      <h2 id="h-espera">Sala de espera</h2>
+      <span class="cont" id="cont-espera"></span>
+    </div>
+    <p class="sub">
+      <span>Aqui suas tarefas aguardam enquanto ouvem <b id="artista">—</b>.</span>
+      <button class="troca-musica" id="btn-musica" title="Trocar a música da sala" aria-label="Trocar a música da sala">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0E9E96" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="16.5" cy="16" r="2.6"/></svg>
+      </button>
+    </p>
+
+    <svg class="cena" viewBox="0 0 800 160" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sala de espera com janela, relógio, cadeiras, revistas, café e plantas">
+      <rect width="800" height="160" fill="#F5FAF9"/>
+      <rect y="132" width="800" height="28" fill="#DCEDE9"/>
+      <!-- janela com moldura -->
+      <rect x="52" y="16" width="90" height="76" rx="10" fill="#E8D5B7"/>
+      <rect x="60" y="24" width="74" height="60" rx="6" fill="#CFEAF2"/>
+      <circle cx="118" cy="40" r="9" fill="#F0A81E"/>
+      <path d="M60 62q18-13 37 0t37-2v14a6 6 0 0 1-6 6H66a6 6 0 0 1-6-6z" fill="#B6DCE8"/>
+      <path d="M97 24v60M60 54h74" stroke="#E8D5B7" stroke-width="5"/>
+      <!-- relógio -->
+      <circle cx="400" cy="46" r="22" fill="#fff"/>
+      <circle cx="400" cy="46" r="22" fill="none" stroke="#DCEDE9" stroke-width="4"/>
+      <path d="M400 34v12l8 5" stroke="#95AFB1" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+      <!-- quadro colorido -->
+      <rect x="636" y="20" width="82" height="62" rx="10" fill="#E8D5B7"/>
+      <rect x="644" y="28" width="66" height="46" rx="5" fill="#FDF3DF"/>
+      <circle cx="694" cy="41" r="7" fill="#F0A81E"/>
+      <path d="M644 62l18-20 13 14 10-11 25 27v2a5 5 0 0 1-5 4h-56a5 5 0 0 1-5-5z" fill="#7FCCC5"/>
+      <path d="M644 66l16-14 14 11 12-9 24 20v1a5 5 0 0 1-5 4h-56a5 5 0 0 1-5-5z" fill="#2FAE73"/>
+      <path d="M660 74h50" stroke="#5CC694" stroke-width="4" stroke-linecap="round"/>
+      <!-- fileira de cadeiras -->
+      <g fill="#7FCCC5">
+        <rect x="196" y="60" width="46" height="22" rx="10"/>
+        <rect x="252" y="60" width="46" height="22" rx="10"/>
+        <rect x="308" y="60" width="46" height="22" rx="10"/>
+      </g>
+      <rect x="190" y="82" width="170" height="15" rx="7.5" fill="#0E9E96"/>
+      <g stroke="#B9D6D2" stroke-width="6" stroke-linecap="round">
+        <path d="M204 97v32"/><path d="M346 97v32"/>
+      </g>
+      <!-- mesinha com revistas -->
+      <rect x="424" y="94" width="104" height="11" rx="5.5" fill="#E8D5B7"/>
+      <path d="M440 105v26M512 105v26" stroke="#E8D5B7" stroke-width="7" stroke-linecap="round"/>
+      <rect x="440" y="82" width="62" height="10" rx="5" fill="#F0A81E"/>
+      <rect x="446" y="72" width="62" height="10" rx="5" fill="#E05243"/>
+      <rect x="442" y="62" width="56" height="10" rx="5" fill="#7FCCC5"/>
+      <!-- mesinha de apoio com o cafezinho -->
+      <rect x="540" y="100" width="66" height="10" rx="5" fill="#E8D5B7"/>
+      <path d="M552 110v22M594 110v22" stroke="#E8D5B7" stroke-width="6" stroke-linecap="round"/>
+      <path d="M556 72h30v18a10 10 0 0 1-10 10h-10a10 10 0 0 1-10-10z" fill="#fff"/>
+      <path d="M586 77h6a8 8 0 0 1 0 16h-6" fill="none" stroke="#DCEDE9" stroke-width="4"/>
+      <path d="M556 72h30v6h-30z" fill="#E05243"/>
+      <g stroke="#B9D6D2" stroke-width="3.4" stroke-linecap="round" fill="none">
+        <path class="vapor" d="M564 64c3-4-3-7 0-11"/>
+        <path class="vapor" d="M572 64c3-4-3-7 0-11"/>
+        <path class="vapor" d="M580 64c3-4-3-7 0-11"/>
+      </g>
+      <!-- planta grande -->
+      <path d="M754 130V88" stroke="#2FAE73" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M754 98c-18-2-27-13-27-27 16 0 27 12 27 27z" fill="#2FAE73"/>
+      <path d="M754 88c18-4 25-16 23-30-16 2-25 15-23 30z" fill="#5CC694"/>
+      <path d="M754 110c-14 2-22 11-23 22 13 1 22-9 23-22z" fill="#5CC694"/>
+      <path d="M732 126h44l-5 24a7 7 0 0 1-7 6h-20a7 7 0 0 1-7-6z" fill="#E8D5B7"/>
+      <!-- planta pequena -->
+      <path d="M626 132v-15" stroke="#2FAE73" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M626 121c-10-1-15-8-15-16 9 0 15 7 15 16z" fill="#5CC694"/>
+      <path d="M626 117c10-2 14-9 13-17-9 1-14 9-13 17z" fill="#2FAE73"/>
+      <path d="M613 128h26l-3 17a6 6 0 0 1-6 5h-8a6 6 0 0 1-6-5z" fill="#F0A81E"/>
+    </svg>
+
+    <div class="filtros" id="filtros"></div>
+    <div id="alerta-vermelhos"></div>
+    <ul class="lista" id="lista"></ul>
+  </section>
+
+  <!-- ALTAS -->
+  <section class="bloco altas" aria-labelledby="h-altas">
+    <div class="cab">
+      <span class="icone" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E9E96" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+      </span>
+      <h2 id="h-altas">Parabéns, a alta está liberada!</h2>
+      <span class="cont" id="cont-altas"></span>
+    </div>
+    <p class="sub">Histórico das suas tarefas que receberam alta e se encontram saudáveis e plenas fora do campo de suas preocupações.</p>
+    <button class="abrir-altas" id="btn-altas" aria-expanded="false" aria-controls="altas">
+      <span id="rotulo-altas">Ver histórico</span>
+      <svg class="seta" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5 12 15.5 18 9.5"/></svg>
+    </button>
+    <div id="altas" hidden></div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="bloco sobre" id="sobre" aria-labelledby="h-sobre">
+    <div class="cab">
+      <span class="icone" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E9E96" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v6"/><path d="M12 7.6v.1"/></svg>
+      </span>
+      <h2 id="h-sobre">Sobre a ferramenta</h2>
+    </div>
+
+    <p>Num pronto-socorro ninguém atende por ordem de chegada nem por quem grita mais alto. Atende-se por <b>consequência da espera</b>. É isso que esta ferramenta faz com a sua lista de trabalho: você descreve a demanda, escolhe a cor e leva três — só três — para a UTI do dia.</p>
+
+    <div class="passos">
+      <div class="passo"><div class="n">1</div><b>Você descreve</b><span>A demanda como ela chegou.</span></div>
+      <div class="passo"><div class="n">2</div><b>Você classifica</b><span>Escolhe a cor, guiado pela pergunta: o que acontece se isso esperar?</span></div>
+      <div class="passo"><div class="n">3</div><b>Três vão para a UTI</b><span>Três mesas por vez. O resto espera, e esperar não é fracasso.</span></div>
+    </div>
+
+    <p style="margin-top:16px">Tudo fica guardado <b>somente</b> no navegador, <b>somente</b> na sua máquina (de nada, LGPD!). Nada sai daqui e ninguém mais vê sua lista. Como consequência, limpar os dados de navegação (cache) apaga tudo. Mas temos uma solução: justamente por isso existe o botão <b>Baixar cópia</b> no rodapé, e um lembrete a cada sete dias.</p>
+
+    <button class="abrir-altas" id="btn-mais" aria-expanded="false" aria-controls="sobre-mais" style="margin-top:18px">
+      <span id="rotulo-mais">De onde veio a ideia</span>
+      <svg class="seta" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5 12 15.5 18 9.5"/></svg>
+    </button>
+
+    <div id="sobre-mais" hidden>
+      <h3>As quatro cores</h3>
+      <p>
+        <b style="color:var(--vermelho-txt)">Vermelho</b> — a espera custa caro: prazo estoura, trava outra pessoa.<br>
+        <b style="color:var(--amarelo-txt)">Amarelo</b> — hoje não dói, mas se ficar rolando vira vermelho.<br>
+        <b style="color:var(--verde-txt)">Verde</b> — a espera não muda nada. Encaixe num vão de agenda ou delegue.<br>
+        <b style="color:var(--preto-txt)">Preto</b> — não é seu, já passou, ou nunca existiu de verdade. Sai da lista e sai da cabeça.
+      </p>
+
+      <h3>A origem</h3>
+      <p>A ideia central é da médica emergencista <b>Darria Long</b>, na palestra <a href="https://www.ted.com/talks/darria_long_an_er_doctor_on_triaging_your_crazy_busy_life" target="_blank" rel="noopener">“An ER doctor on triaging your crazy busy life”</a> (TEDx Naperville, 2019). Ela descreve a passagem do “modo louco” para o <b>modo pronto</b>: em vez de reagir a tudo com a mesma intensidade, classificar por grau de urgência. O argumento não é de produtividade, é de fisiologia — ela cita a pesquisa de Robert Sapolsky segundo a qual quem não distingue ameaça de não-ameaça e reage igual a tudo carrega o dobro de hormônio do estresse.</p>
+      <p style="margin-top:10px">O limite de três mesas vem do <b>limite de trabalho em andamento</b> do Kanban: fila infinita não entrega mais rápido, entrega mais devagar. O bloco de hoje corresponde ao que Long chama de <b>Key 3</b>.</p>
+
+      <h3>Onde a ideia foi gestada</h3>
+      <p>Esta ferramenta foi criada por <a href="https://alecamargo.me" target="_blank" rel="noopener">Alexandre Camargo</a> e nasceu durante a 2ª edição do curso <b>“Servidores do Futuro: Gestão de Pessoas”</b>, da Enap, ministrado por <b>Mariana Dalcanale</b>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div>Feito para durar mais do que uma semana ❤️</div>
+    <div class="acoes">
+      <button class="mini" id="btn-exportar">⬇️ Baixar cópia</button>
+      <button class="mini" id="btn-importar">⬆️ Restaurar cópia</button>
+      <button class="mini" id="btn-planilha">📊 Baixar planilha</button>
+      <button class="mini" id="btn-limpar">Começar do zero</button>
+    </div>
+    <input type="file" id="arquivo" accept="application/json,.json" hidden>
+  </footer>
+</div>
+
+<div class="modal" id="modal-uti" hidden role="alertdialog" aria-modal="true" aria-labelledby="modal-tit">
+  <div class="modal-caixa">
+    <svg viewBox="0 0 200 120" role="img" aria-label="Ambulância com cruz">
+      <rect width="200" height="120" rx="20" fill="#EAF4F2"/>
+      <path d="M40 42h74v46H40a10 10 0 0 1-10-10V52a10 10 0 0 1 10-10z" fill="#FFFFFF"/>
+      <path d="M114 52h24l22 20v6a10 10 0 0 1-10 10h-36z" fill="#FFFFFF"/>
+      <rect x="120" y="56" width="24" height="15" rx="5" fill="#CFEAF2"/>
+      <rect x="30" y="72" width="140" height="8" rx="4" fill="#0E9E96"/>
+      <rect x="52" y="53" width="30" height="9" rx="4.5" fill="#E05243"/>
+      <rect x="62.5" y="42.5" width="9" height="30" rx="4.5" fill="#E05243"/>
+      <rect x="56" y="32" width="24" height="10" rx="5" fill="#F0A81E"/>
+      <circle cx="62" cy="90" r="12" fill="#0F2C31"/><circle cx="62" cy="90" r="5" fill="#FFFFFF"/>
+      <circle cx="140" cy="90" r="12" fill="#0F2C31"/><circle cx="140" cy="90" r="5" fill="#FFFFFF"/>
+      <path d="M12 52h14M8 66h12" stroke="#B9D6D2" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <h3 id="modal-tit">A UTI está lotada</h3>
+    <p>São três mesas, e as três já estão ocupadas. Para trazer esta tarefa, dê alta a alguma ou devolva uma delas à sala de espera.</p>
+    <button class="btn btn-acento" id="modal-ok">Entendi</button>
+  </div>
+</div>
+
+<div class="menu" id="menu" role="menu" aria-label="Escolha a cor da triagem"></div>
+
+<script>
+(function(){
+"use strict";
+
+var CORES = {v:{rot:"Vermelho"}, a:{rot:"Amarelo"}, g:{rot:"Verde"}, p:{rot:"Preto"}};
+var HEX = {v:"#E05243", a:"#F0A81E", g:"#2FAE73", p:"#6A7C80"};
+var DESC = {
+  v:"Estoura prazo, trava outra pessoa ou queima alguém.",
+  a:"Hoje não dói. Mas se ficar rolando, vira vermelho.",
+  g:"A espera não muda nada. Encaixe num vão ou delegue.",
+  p:"Não é seu, já passou, ou nunca existiu de verdade."
+};
+var ORDEM = ["v","a","g","p"];
+var CHAVE = "triagem.v3";
+
+function id(){ return Math.random().toString(36).slice(2,10); }
+function esc(s){ var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function escAttr(s){ return esc(s).replace(/"/g,"&quot;"); }
+function diaDe(ts){ var d = new Date(ts); return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate(); }
+function hojeStr(){ return diaDe(Date.now()); }
+var ONTEM = Date.now() - 86400000;
+var $ = function(s){ return document.querySelector(s); };
+
+/* ---------------- trilha sonora da sala de espera ---------------- */
+var ARTISTAS = [
+ "Elis Regina","Tom Jobim","Chico Buarque","Caetano Veloso","Gilberto Gil","Gal Costa",
+ "Milton Nascimento","João Gilberto","Jorge Ben Jor","Tim Maia","Cartola","Clara Nunes",
+ "Beth Carvalho","Djavan","Marisa Monte","Cássia Eller","Rita Lee","Legião Urbana",
+ "Titãs","Os Paralamas do Sucesso","Os Mutantes","Novos Baianos","Racionais MC's","Emicida",
+ "Criolo","Seu Jorge","Zeca Pagodinho","Alcione","Elza Soares","Nara Leão",
+ "Baden Powell","Hermeto Pascoal","Egberto Gismonti","Luiz Gonzaga","Dominguinhos","Alceu Valença",
+ "Geraldo Azevedo","Zé Ramalho","Belchior","Raul Seixas","Ney Matogrosso","Maria Bethânia",
+ "Nana Caymmi","Dorival Caymmi","Toquinho","Ivan Lins","Tom Zé","Arnaldo Antunes",
+ "Adriana Calcanhotto","Zeca Baleiro","Lenine","Chico Science & Nação Zumbi","Otto","Céu",
+ "Tulipa Ruiz","Liniker","Anavitória","Marcelo D2","Sandra de Sá","Wilson Simonal",
+ "Martinho da Vila","Paulinho da Viola","João Bosco","Guinga","Yamandu Costa","Hamilton de Holanda",
+ "Miles Davis","John Coltrane","Ella Fitzgerald","Nina Simone","Billie Holiday","Aretha Franklin",
+ "Stevie Wonder","Marvin Gaye","Curtis Mayfield","Otis Redding","The Beatles","Pink Floyd",
+ "David Bowie","Talking Heads","Radiohead","Massive Attack","Portishead","Björk",
+ "Joni Mitchell","Leonard Cohen","Bob Dylan","Tom Waits","Fleetwood Mac","Chet Baker",
+ "Bill Evans","Thelonious Monk","Herbie Hancock","Erykah Badu","Sade","Norah Jones",
+ "Buena Vista Social Club","Mercedes Sosa","Cesária Évora","Fela Kuti"
+];
+function sorteiaArtista(){
+  var n = ARTISTAS[Math.floor(Math.random() * ARTISTAS.length)];
+  $("#artista").textContent = n;
+}
+
+/* ---------------- exemplo ---------------- */
+function exemploItens(){
+  return [
+    {id:id(), txt:"Ex.: assinar o ofício que vence hoje às 18h — já perguntaram “e aquilo?” duas vezes", cor:"v", leito:true, desde:ONTEM, fig:0},
+    {id:id(), txt:"Ex.: fechar a nota técnica que volta amanhã da consultoria jurídica", cor:"v", leito:true, desde:ONTEM, fig:4},
+    {id:id(), txt:"Ex.: responder o e-mail que começa com “conforme alinhado” sobre algo que nunca foi alinhado", cor:"a", leito:false},
+    {id:id(), txt:"Ex.: preencher o levantamento cujo prazo ninguém sabe qual é, mas todos temem", cor:"a", leito:false},
+    {id:id(), txt:"Ex.: confirmar se a reunião de quinta continua de pé ou já virou e-mail", cor:"a", leito:false},
+    {id:id(), txt:"Ex.: trocar a foto do crachá — a atual é de quando você ainda dormia bem", cor:"g", leito:false},
+    {id:id(), txt:"Ex.: organizar a pasta com 340 arquivos chamados documento(3).pdf", cor:"g", leito:false},
+    {id:id(), txt:"Ex.: ensaiar mentalmente a resposta perfeita para a reunião de terça, que já acabou", cor:"p", leito:false},
+    {id:id(), txt:"Ex.: ler as 47 mensagens do grupo “Avisos SIG” sobre o elevador que já consertaram", cor:"p", leito:false},
+    {id:id(), txt:"Ex.: descobrir quem colocou “Prezados,” em negrito no modelo do memorando", cor:"p", leito:false}
+  ];
+}
+function exemploAltas(){
+  return [
+    {id:id(), txt:"Ex.: achar a versão final entre “final”, “final2” e “final_ok_ESTE”", cor:"a", tipo:"alta", quando:Date.now()-5400000},
+    {id:id(), txt:"Ex.: descobrir por que a impressora do corredor só imprime em espanhol", cor:"p", tipo:"descarte", quando:Date.now()-86400000}
+  ];
+}
+
+/* ---------------- persistência ---------------- */
+var podeSalvar = true;
+function carregar(){
+  try{
+    var cru = window.localStorage.getItem(CHAVE);
+    if(cru === null) return {itens:exemploItens(), altas:exemploAltas(), avisoDia:"", backup:0, adiado:0};
+    var v = JSON.parse(cru);
+    return {
+      itens: Array.isArray(v.itens) ? v.itens : [],
+      altas: Array.isArray(v.altas) ? v.altas : [],
+      avisoDia: v.avisoDia || "",
+      backup: v.backup || 0,
+      adiado: v.adiado || 0
+    };
+  }catch(e){ podeSalvar = false; return {itens:exemploItens(), altas:exemploAltas(), avisoDia:"", backup:0, adiado:0}; }
+}
+function salvar(){
+  if(!podeSalvar) return;
+  try{ window.localStorage.setItem(CHAVE, JSON.stringify({itens:itens, altas:altas, avisoDia:avisoDia, backup:backup, adiado:adiado})); }
+  catch(e){ podeSalvar = false; avisar(); }
+}
+function avisar(){ if(!podeSalvar) document.getElementById("aviso-storage").hidden = false; }
+
+var est = carregar();
+var itens = est.itens, altas = est.altas, avisoDia = est.avisoDia;
+var backup = est.backup, adiado = est.adiado;
+var filtro = "todos";
+var altasAbertas = false;
+var editando = null;
+
+/* pede ao navegador para não descartar os dados por conta própria */
+if(navigator.storage && navigator.storage.persist){
+  try{ navigator.storage.persist(); }catch(e){}
+}
+
+/* ---------------- menu suspenso de cores ---------------- */
+var menu = $("#menu"), aoEscolher = null, botaoAtivo = null;
+
+function montaMenu(titulo, ops){
+  var html = '<div class="cabecalho">' + titulo + "</div>";
+  ops.forEach(function(o){
+    var c = o.k === "uti" ? "g" : o.k;
+    html += '<button class="opcao ' + c + '" role="menuitem" data-escolha="' + o.k + '">' +
+              '<span class="pt" style="background:' + (o.hex || HEX[o.k]) + '"></span>' +
+              '<span><span class="nome"' + (o.k === "uti" ? ' style="color:#0A6A65"' : "") + ">" +
+              (o.nome || CORES[o.k].rot) + '</span><span class="desc">' + (o.desc || DESC[o.k]) + "</span></span>" +
+            "</button>";
+  });
+  menu.innerHTML = html;
+}
+function posicionaMenu(){
+  if(!botaoAtivo) return;
+  var r = botaoAtivo.getBoundingClientRect();
+  if(r.bottom < 0 || r.top > window.innerHeight){ fechaMenu(); return; }
+  var lg = menu.offsetWidth, al = menu.offsetHeight;
+  var esq = Math.min(Math.max(8, r.left), window.innerWidth - lg - 8);
+  var topo = (r.bottom + al + 10 < window.innerHeight) ? r.bottom + 6 : Math.max(8, r.top - al - 6);
+  menu.style.left = esq + "px";
+  menu.style.top = topo + "px";
+}
+function abreMenu(btn, titulo, ops, cb){
+  montaMenu(titulo, ops);
+  aoEscolher = cb; botaoAtivo = btn;
+  menu.classList.add("aberto");
+  btn.setAttribute("aria-expanded","true");
+  posicionaMenu();
+  menu.querySelector(".opcao").focus({preventScroll:true});
+}
+function fechaMenu(){
+  menu.classList.remove("aberto");
+  if(botaoAtivo) botaoAtivo.setAttribute("aria-expanded","false");
+  aoEscolher = null; botaoAtivo = null;
+}
+document.addEventListener("keydown", function(e){
+  if(e.target && e.target.id === "edit-input"){
+    if(e.key === "Enter"){
+      var alvo = document.querySelector("[data-salvar]");
+      if(alvo) alvo.click();
+      e.preventDefault(); return;
+    }
+    if(e.key === "Escape"){ editando = null; pintar(); e.stopPropagation(); return; }
+  }
+  if(e.key === "Escape") fechaMenu();
+});
+window.addEventListener("resize", posicionaMenu);
+window.addEventListener("scroll", posicionaMenu, true);
+
+/* ---------------- desenho da mesa de trabalho ---------------- */
+/* cinco personagens, sorteados pelo id da tarefa (estável entre repinturas) */
+var FIGURAS = 5;
+function figuraDe(txtId){
+  var s = 7;
+  for(var i = 0; i < txtId.length; i++) s = (s * 31 + txtId.charCodeAt(i)) % 100003;
+  return s % FIGURAS;
+}
+
+/* gramática comum a todos: olhos redondos brancos com pupila escura,
+   traço de 2.4, torso na cor da triagem, mão que alcança a folha em (99,72) */
+function olhos(x1, x2, y, r){
+  return '<circle cx="' + x1 + '" cy="' + y + '" r="' + r + '" fill="#FFFFFF"/>' +
+         '<circle cx="' + x2 + '" cy="' + y + '" r="' + r + '" fill="#FFFFFF"/>' +
+         '<circle cx="' + (x1+0.6) + '" cy="' + (y+0.4) + '" r="' + (r*0.42) + '" fill="#0F2C31"/>' +
+         '<circle cx="' + (x2+0.6) + '" cy="' + (y+0.4) + '" r="' + (r*0.42) + '" fill="#0F2C31"/>';
+}
+function braco(cor, larg){
+  return '<path d="M77 63q13 2 20 9" stroke="' + cor + '" stroke-width="' + (larg || 8) +
+         '" stroke-linecap="round" fill="none"/>';
+}
+
+/* 0 — dinossauro */
+function figDino(c){
+  return braco("#2FAE73", 8) +
+    '<path d="M40 82V64a14 14 0 0 1 14-14h16a14 14 0 0 1 14 14v18z" fill="' + c + '"/>' +
+    '<path d="M52 22l5-8 5 8zM64 20l5-9 5 9z" fill="#187A4E"/>' +
+    '<rect x="42" y="20" width="40" height="32" rx="15" fill="#2FAE73"/>' +
+    '<path d="M78 40h8a5 5 0 0 1 5 5v2a4 4 0 0 1-4 4h-9z" fill="#5CC694"/>' +
+    '<circle cx="85" cy="45" r="1.4" fill="#187A4E"/>' +
+    olhos(55, 71, 33, 5) +
+    '<path d="M58 44q6 4 12 0" stroke="#187A4E" stroke-width="2.4" stroke-linecap="round" fill="none"/>' +
+    '<path d="M62 44v3.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>';
+}
+
+/* 1 — robô */
+function figRobo(c){
+  return braco("#95AFB1", 7) +
+    '<path d="M62 16v-5" stroke="#95AFB1" stroke-width="3" stroke-linecap="round"/>' +
+    '<circle cx="62" cy="9" r="4" fill="' + c + '"/>' +
+    '<path d="M40 82V66a12 12 0 0 1 12-12h20a12 12 0 0 1 12 12v16z" fill="' + c + '"/>' +
+    '<rect x="52" y="62" width="20" height="12" rx="4" fill="#FFFFFF" opacity=".65"/>' +
+    '<circle cx="58" cy="68" r="2.2" fill="' + c + '"/><circle cx="66" cy="68" r="2.2" fill="' + c + '"/>' +
+    '<rect x="44" y="18" width="36" height="32" rx="9" fill="#C6D9D6"/>' +
+    '<rect x="48" y="22" width="28" height="18" rx="5" fill="#0F2C31"/>' +
+    olhos(56, 68, 31, 4.2) +
+    '<path d="M55 45h14" stroke="#95AFB1" stroke-width="3" stroke-linecap="round"/>' +
+    '<path d="M40 28h-4M88 28h-4" stroke="#95AFB1" stroke-width="4" stroke-linecap="round"/>';
+}
+
+/* 2 — extraterrestre */
+function figEt(c){
+  return braco("#5CC694", 7) +
+    '<path d="M52 20q-4-8-9-10M72 20q4-8 9-10" stroke="#5CC694" stroke-width="2.8" stroke-linecap="round" fill="none"/>' +
+    '<circle cx="42" cy="9" r="3.4" fill="' + c + '"/><circle cx="82" cy="9" r="3.4" fill="' + c + '"/>' +
+    '<path d="M42 82V66a12 12 0 0 1 12-12h16a12 12 0 0 1 12 12v16z" fill="' + c + '"/>' +
+    '<path d="M62 16c13 0 21 10 21 21 0 11-9 19-21 19s-21-8-21-19c0-11 8-21 21-21z" fill="#7FCCC5"/>' +
+    '<ellipse cx="54" cy="34" rx="6.5" ry="8.5" transform="rotate(-16 54 34)" fill="#0F2C31"/>' +
+    '<ellipse cx="70" cy="34" rx="6.5" ry="8.5" transform="rotate(16 70 34)" fill="#0F2C31"/>' +
+    '<circle cx="52" cy="31" r="1.8" fill="#FFFFFF"/><circle cx="68" cy="31" r="1.8" fill="#FFFFFF"/>' +
+    '<path d="M57 47q5 3 10 0" stroke="#2FAE73" stroke-width="2.4" stroke-linecap="round" fill="none"/>';
+}
+
+/* 3 — disquete */
+function figDisquete(c){
+  return braco("#4A5A5E", 6) +
+    '<path d="M36 82v-8M88 82v-8" stroke="#4A5A5E" stroke-width="6" stroke-linecap="round"/>' +
+    '<path d="M38 24h40l8 8v50H38z" fill="#4A5A5E"/>' +
+    '<rect x="56" y="24" width="20" height="16" rx="2" fill="#C6D9D6"/>' +
+    '<rect x="66" y="26" width="6" height="12" rx="1.5" fill="#95AFB1"/>' +
+    '<rect x="44" y="58" width="36" height="20" rx="3" fill="#FFFFFF"/>' +
+    '<path d="M48 64h28M48 70h18" stroke="' + c + '" stroke-width="3" stroke-linecap="round"/>' +
+    olhos(52, 70, 48, 5) +
+    '<path d="M56 55q6 3.5 12 0" stroke="#C6D9D6" stroke-width="2.4" stroke-linecap="round" fill="none"/>';
+}
+
+/* 4 — hominho palito */
+function figPalito(c){
+  return '<g stroke="' + c + '" stroke-width="4" stroke-linecap="round" fill="none">' +
+      '<circle cx="62" cy="30" r="15" fill="#FFFFFF"/>' +
+      '<path d="M62 45v25"/>' +
+      '<path d="M62 52L44 64"/>' +
+      '<path d="M62 52q16 3 33 17"/>' +
+      '<path d="M62 70l-11 12M62 70l11 12"/>' +
+    "</g>" +
+    '<circle cx="56" cy="27" r="2.6" fill="#0F2C31"/><circle cx="68" cy="27" r="2.6" fill="#0F2C31"/>' +
+    '<path d="M55 35q7 5 14 0" stroke="#0F2C31" stroke-width="2.6" stroke-linecap="round" fill="none"/>';
+}
+
+var DESENHOS = [figDino, figRobo, figEt, figDisquete, figPalito];
+var MAOS = ["#2FAE73", "#95AFB1", "#5CC694", "#4A5A5E", null]; /* null = usa a cor da triagem */
+var NOMES_FIG = ["Dinossauro", "Robô", "Extraterrestre", "Disquete", "Boneco palito"];
+
+function mesa(cor, vazio, chave, figFixa){
+  var c = HEX[cor];
+  var fig = (figFixa >= 0 && figFixa < FIGURAS) ? figFixa : figuraDe(chave || "x");
+
+  var pensando = vazio ? "" :
+    '<g stroke="#B9D6D2" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9">' +
+      '<path class="pensa p1" d="M49 15c3.5-4-3-7 .5-10"/>' +
+      '<path class="pensa p2" d="M62 12c3.5-4-3-7 .5-10"/>' +
+      '<path class="pensa p3" d="M75 15c3.5-4-3-7 .5-10"/>' +
+    "</g>";
+
+  var personagem = vazio ? "" : DESENHOS[fig](c);
+
+  var folha = vazio ? "" :
+    '<g transform="rotate(-9 112 66)">' +
+      '<rect x="96" y="46" width="30" height="38" rx="3" fill="#FFFFFF" stroke="#DCEDE9" stroke-width="2.2"/>' +
+      '<path d="M102 55h18M102 62h18M102 69h12" stroke="#B9D6D2" stroke-width="2.2" stroke-linecap="round"/>' +
+    "</g>";
+
+  var mao = vazio ? "" :
+    '<circle cx="99" cy="72" r="' + (fig === 4 ? 4 : 5) + '" fill="' + (MAOS[fig] || c) + '"/>';
+
+  var tela = vazio ? "#EDF2F2" : "#CFEAF2";
+  var monitor =
+    '<rect x="14" y="46" width="38" height="28" rx="4" fill="#FFFFFF" stroke="#C6D9D6" stroke-width="2.5"/>' +
+    '<rect x="19" y="51" width="28" height="18" rx="2" fill="' + tela + '"/>' +
+    (vazio ? "" : '<path d="M23 56h20M23 61h14M23 66h17" stroke="#8FC4D6" stroke-width="2" stroke-linecap="round"/>') +
+    '<path d="M33 74v6" stroke="#C6D9D6" stroke-width="4"/>' +
+    '<rect x="24" y="79" width="18" height="4" rx="2" fill="#C6D9D6"/>';
+
+  return '<svg class="mesa" viewBox="0 0 150 104" role="img" aria-label="' +
+      (vazio ? "Mesa de trabalho vazia" : NOMES_FIG[fig] + " trabalhando na mesa") + '">' +
+    pensando + personagem + folha + mao +
+    '<rect x="6" y="82" width="138" height="9" rx="4.5" fill="#E8D5B7"/>' +
+    '<path d="M18 91v11M132 91v11" stroke="#D9C09A" stroke-width="6" stroke-linecap="round"/>' +
+    monitor +
+    '<rect x="58" y="86" width="44" height="6" rx="3" fill="#DCEDE9"/>' +
+  "</svg>";
+}
+
+/* ---------------- render ---------------- */
+function LAPIS(){
+  return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/></svg>';
+}
+function campoEdicao(it){
+  return '<div class="editando">' +
+    '<input type="text" id="edit-input" value="' + escAttr(it.txt) + '" aria-label="Editar o texto da tarefa">' +
+    '<span style="display:flex;gap:6px">' +
+      '<button class="mini destaque" data-salvar="' + it.id + '">Salvar</button>' +
+      '<button class="mini" data-cancelar="1">Cancelar</button>' +
+    "</span></div>";
+}
+
+function antigosNaUti(){
+  var h = hojeStr();
+  return itens.filter(function(i){ return i.leito && i.desde && diaDe(i.desde) !== h; });
+}
+function pintaAvisoOntem(){
+  var box = $("#aviso-ontem"), velhos = antigosNaUti();
+  if(velhos.length === 0 || avisoDia === hojeStr()){ box.innerHTML = ""; return; }
+  box.innerHTML = '<div class="aviso-ontem">' +
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>' +
+    "<div><b>" + velhos.length + (velhos.length === 1 ? " tarefa está" : " tarefas estão") +
+    " na UTI desde ontem.</b> Continuam com a mesma cor hoje, ou você está travado esperando alguém?</div>" +
+    '<button class="fechar" id="fecha-aviso">Já reavaliei</button></div>';
+}
+
+function pintaLeitos(){
+  var naUti = itens.filter(function(i){ return i.leito; }), html = "";
+  for(var n = 0; n < 3; n++){
+    var it = naUti[n];
+    if(it){
+      html += '<div class="leito ocupado ' + it.cor + '">' + mesa(it.cor,false,it.id,it.fig) +
+        '<span class="pill ' + it.cor + '"><span class="pt"></span>' + CORES[it.cor].rot + "</span>" +
+        (editando === it.id ? campoEdicao(it) : '<div class="txt">' + esc(it.txt) + "</div>") +
+        '<div class="rod"><button class="mini destaque" data-alta="' + it.id + '">🙏 Dar alta</button>' +
+        '<button class="mini" data-editar="' + it.id + '" aria-label="Editar tarefa">' + LAPIS() + " Editar</button>" +
+        '<button class="mini" data-tirar="' + it.id + '">🕰️ Voltar à espera</button></div></div>';
+    }else{
+      html += '<div class="leito livre">' + mesa("g",true) +
+        '<div><div class="rotulo">Mesa ' + (n+1) + ' livre</div><div class="dica">Traga tarefa da sala de espera</div></div></div>';
+    }
+  }
+  $("#leitos").innerHTML = html;
+  $("#cont-uti").textContent = naUti.length + " de 3 mesas ocupadas";
+  pintaAvisoOntem();
+}
+
+function naEspera(){ return itens.filter(function(i){ return !i.leito; }); }
+
+function pintaFiltros(){
+  var fila = naEspera();
+  var html = '<button class="chip" data-filtro="todos" aria-pressed="' + (filtro==="todos") + '">Tudo <span class="n">' + fila.length + "</span></button>";
+  ORDEM.forEach(function(c){
+    var n = fila.filter(function(i){ return i.cor === c; }).length;
+    html += '<button class="chip" data-filtro="' + c + '" aria-pressed="' + (filtro===c) + '">' +
+            '<span class="pt" style="background:' + HEX[c] + '"></span>' + CORES[c].rot + ' <span class="n">' + n + "</span></button>";
+  });
+  $("#filtros").innerHTML = html;
+  $("#cont-espera").textContent = fila.length + " na fila";
+}
+
+function pintaAlerta(){
+  var n = itens.filter(function(i){ return i.cor === "v"; }).length;
+  $("#alerta-vermelhos").innerHTML = n > 3
+    ? '<div class="alerta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 3v10"/><path d="M12 18v.1"/></svg>' +
+      "<div><b>" + n + " vermelhos.</b> No pronto-socorro isso é desastre com múltiplas vítimas, e provavelmente não é o que está acontecendo hoje. Reveja: pelo menos dois desses são amarelos bem maquiados.</div></div>"
+    : "";
+}
+
+function cardHTML(it, comPill){
+  return '<li class="card ' + it.cor + '">' +
+    (comPill ? '<span class="pill ' + it.cor + '"><span class="pt"></span>' + CORES[it.cor].rot + "</span>" : "") +
+    (editando === it.id ? campoEdicao(it) : '<span class="corpo">' + esc(it.txt) + "</span>") +
+    '<span class="acoes">' +
+      (it.cor !== "p" ? '<button class="mini destaque" data-uti="' + it.id + '">Internar na UTI</button>' : "") +
+      '<button class="mini" data-triagem="' + it.id + '" aria-haspopup="menu" aria-expanded="false">Triagem' +
+        ' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5 12 15.5 18 9.5"/></svg></button>' +
+      '<button class="mini" data-editar="' + it.id + '" aria-label="Editar tarefa">' + LAPIS() + " Editar</button>" +
+      '<button class="mini" data-alta="' + it.id + '">' + (it.cor === "p" ? "Descartar" : "🙏 Dar alta") + "</button>" +
+    "</span></li>";
+}
+
+function pintaLista(){
+  var ul = $("#lista");
+  var fila = naEspera();
+  var vis = fila.filter(function(i){ return filtro === "todos" || i.cor === filtro; });
+  if(vis.length === 0){
+    ul.innerHTML = '<li class="nada">' + (fila.length === 0
+      ? "Sala de espera vazia. <b>Escreva a primeira demanda lá em cima.</b>"
+      : "Nada nesta cor. <b>Bom sinal</b>, dependendo da cor.") + "</li>";
+    return;
+  }
+  var html = "";
+  if(filtro === "todos"){
+    ORDEM.forEach(function(c){
+      var grupo = vis.filter(function(i){ return i.cor === c; });
+      if(grupo.length === 0) return;
+      html += '<li class="grupo-cab"><span class="pt" style="background:' + HEX[c] + '"></span>' +
+              CORES[c].rot + ' <span class="qtd">' + grupo.length + '</span><span class="risca"></span></li>';
+      grupo.forEach(function(it){ html += cardHTML(it, false); });
+    });
+  }else{
+    vis.forEach(function(it){ html += cardHTML(it, true); });
+  }
+  ul.innerHTML = html;
+}
+
+function quandoTexto(ts){
+  var d = new Date(ts), z = function(n){ return String(n).padStart(2,"0"); };
+  return z(d.getDate()) + "/" + z(d.getMonth()+1) + " às " + z(d.getHours()) + ":" + z(d.getMinutes());
+}
+function pintaAltas(){
+  $("#cont-altas").textContent = altas.length + (altas.length === 1 ? " registro" : " registros");
+  $("#rotulo-altas").textContent = altasAbertas ? "Ocultar histórico" : "Ver histórico (" + altas.length + ")";
+  $("#btn-altas").setAttribute("aria-expanded", altasAbertas ? "true" : "false");
+  var box = $("#altas");
+  box.hidden = !altasAbertas;
+  if(!altasAbertas) return;
+  if(altas.length === 0){
+    box.innerHTML = '<div class="nada">Ninguém recebeu alta ainda. <b>A primeira sempre é a melhor.</b></div>';
+    return;
+  }
+  var html = "";
+  altas.slice().sort(function(a,b){ return b.quando - a.quando; }).forEach(function(a){
+    html += '<div class="item"><span class="pill ' + a.cor + '"><span class="pt"></span>' +
+            (a.tipo === "descarte" ? "Descartada" : "Resolvida") + "</span>" +
+            '<span class="texto">' + esc(a.txt) + '</span><span class="quando">' + quandoTexto(a.quando) + "</span></div>";
+  });
+  html += '<div style="margin-top:14px"><button class="mini" id="btn-limpar-altas">Esvaziar histórico</button></div>';
+  box.innerHTML = html;
+}
+
+/* ---------------- backup: baixar, restaurar e lembrar ---------------- */
+var SETE_DIAS = 7 * 86400000, TRES_DIAS = 3 * 86400000;
+
+function pintaFaixaBackup(){
+  var box = $("#faixa-backup");
+  var temDados = itens.length > 0 || altas.length > 0;
+  var venceu = backup ? (Date.now() - backup > SETE_DIAS) : false;
+  var adiadoAinda = adiado && (Date.now() - adiado < TRES_DIAS);
+  if(!temDados || !venceu || adiadoAinda){ box.innerHTML = ""; return; }
+  var dias = Math.floor((Date.now() - backup) / 86400000);
+  box.innerHTML = '<div class="faixa-backup">' +
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4 19h16"/></svg>' +
+    '<span class="txt"><b>Faz ' + dias + ' dias que você não baixa uma cópia.</b> Se este navegador for limpo, a lista some junto.</span>' +
+    '<span class="btns"><button class="b b1" id="backup-agora">Baixar agora</button>' +
+    '<button class="b b2" id="backup-depois">Depois</button></span></div>';
+}
+
+function baixa(conteudo, nome, tipo){
+  var blob = new Blob([conteudo], {type:tipo});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = nome;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+function carimbo(){
+  var d = new Date(), z = function(n){ return String(n).padStart(2,"0"); };
+  return d.getFullYear() + "-" + z(d.getMonth()+1) + "-" + z(d.getDate());
+}
+
+function exportar(){
+  var pacote = {app:"TriagemGov", versao:1, gerado:new Date().toISOString(), itens:itens, altas:altas};
+  baixa(JSON.stringify(pacote, null, 2), "triagemgov-" + carimbo() + ".json", "application/json");
+  backup = Date.now(); adiado = 0; salvar(); pintar();
+}
+
+function csvCampo(v){ return '"' + String(v).replace(/"/g,'""') + '"'; }
+function exportarPlanilha(){
+  var linhas = [["Situação","Cor","Tarefa","Data"].map(csvCampo).join(";")];
+  itens.filter(function(i){ return i.leito; }).forEach(function(i){
+    linhas.push([csvCampo("Na UTI"), csvCampo(CORES[i.cor].rot), csvCampo(i.txt),
+                 csvCampo(i.desde ? quandoTexto(i.desde) : "")].join(";"));
+  });
+  naEspera().forEach(function(i){
+    linhas.push([csvCampo("Sala de espera"), csvCampo(CORES[i.cor].rot), csvCampo(i.txt), csvCampo("")].join(";"));
+  });
+  altas.slice().sort(function(a,b){ return b.quando - a.quando; }).forEach(function(a){
+    linhas.push([csvCampo(a.tipo === "descarte" ? "Descartada" : "Recebeu alta"),
+                 csvCampo(CORES[a.cor].rot), csvCampo(a.txt), csvCampo(quandoTexto(a.quando))].join(";"));
+  });
+  baixa("\uFEFF" + linhas.join("\r\n"), "triagemgov-" + carimbo() + ".csv", "text/csv;charset=utf-8");
+}
+
+function limpaItem(o){
+  if(!o || typeof o.txt !== "string") return null;
+  var cor = (ORDEM.indexOf(o.cor) > -1) ? o.cor : "g";
+  var it = {id:(typeof o.id === "string" ? o.id : id()), txt:o.txt.slice(0,500), cor:cor, leito:o.leito === true};
+  if(it.cor === "p") it.leito = false;
+  if(typeof o.fig === "number" && o.fig >= 0 && o.fig < FIGURAS) it.fig = o.fig;
+  if(it.leito && typeof o.desde === "number") it.desde = o.desde;
+  else if(it.leito) it.desde = Date.now();
+  return it;
+}
+function limpaAlta(o){
+  if(!o || typeof o.txt !== "string") return null;
+  return {
+    id:(typeof o.id === "string" ? o.id : id()),
+    txt:o.txt.slice(0,500),
+    cor:(ORDEM.indexOf(o.cor) > -1 ? o.cor : "g"),
+    tipo:(o.tipo === "descarte" ? "descarte" : "alta"),
+    quando:(typeof o.quando === "number" ? o.quando : Date.now())
+  };
+}
+
+function importar(texto){
+  var dados;
+  try{ dados = JSON.parse(texto); }
+  catch(e){ alert("Não consegui ler este arquivo. Ele precisa ser um arquivo .json gerado pelo próprio TriagemGov."); return; }
+  if(!dados || (!Array.isArray(dados.itens) && !Array.isArray(dados.altas))){
+    alert("Este arquivo não parece ser uma cópia do TriagemGov."); return;
+  }
+  var novosItens = (dados.itens || []).map(limpaItem).filter(Boolean);
+  var novasAltas = (dados.altas || []).map(limpaAlta).filter(Boolean);
+  /* no máximo três mesas ocupadas */
+  var conta = 0;
+  novosItens.forEach(function(i){
+    if(i.leito){ conta++; if(conta > 3) i.leito = false; }
+  });
+  if(!confirm("Restaurar " + novosItens.length + " tarefa(s) e " + novasAltas.length +
+              " registro(s) de alta?\n\nIsto substitui o que está na tela agora.")) return;
+  itens = novosItens; altas = novasAltas;
+  avisoDia = ""; backup = Date.now(); adiado = 0;
+  filtro = "todos"; editando = null;
+  salvar(); pintar();
+}
+
+$("#btn-exportar").addEventListener("click", exportar);
+$("#btn-planilha").addEventListener("click", exportarPlanilha);
+$("#btn-importar").addEventListener("click", function(){ $("#arquivo").click(); });
+$("#arquivo").addEventListener("change", function(){
+  var f = this.files && this.files[0];
+  if(!f) return;
+  var leitor = new FileReader();
+  leitor.onload = function(){ importar(String(leitor.result)); };
+  leitor.onerror = function(){ alert("Não consegui abrir o arquivo."); };
+  leitor.readAsText(f);
+  this.value = "";
+});
+
+function pintar(){
+  pintaLeitos(); pintaFiltros(); pintaAlerta(); pintaLista(); pintaAltas(); pintaFaixaBackup(); avisar();
+  var campoEdit = document.getElementById("edit-input");
+  if(campoEdit){ campoEdit.focus(); campoEdit.setSelectionRange(campoEdit.value.length, campoEdit.value.length); }
+}
+
+/* ---------------- ações ---------------- */
+function pos(x){ for(var i=0;i<itens.length;i++){ if(itens[i].id === x) return i; } return -1; }
+
+var OPS_NOVA = [
+  {k:"v"}, {k:"a"}, {k:"g"},
+  {k:"uti", nome:"Direto para a UTI 🚨", hex:"#0E9E96", desc:"Entra como vermelho e já ocupa uma das três mesas."}
+];
+var OPS_RETRIAGEM = [{k:"v"},{k:"a"},{k:"g"},{k:"p"}];
+
+function utiCheia(){ return itens.filter(function(i){ return i.leito; }).length >= 3; }
+function avisaUtiCheia(){
+  var m = $("#modal-uti");
+  m.hidden = false;
+  $("#modal-ok").focus();
+}
+$("#modal-ok").addEventListener("click", function(){ $("#modal-uti").hidden = true; });
+$("#modal-uti").addEventListener("click", function(e){ if(e.target === this) this.hidden = true; });
+
+$("#btn-triar").addEventListener("click", function(e){
+  e.stopPropagation();
+  var campo = $("#campo"), txt = campo.value.trim();
+  if(!txt){ campo.focus(); return; }
+  abreMenu(this, "Qual a cor desta tarefa?", OPS_NOVA, function(escolha){
+    if(escolha === "uti"){
+      if(utiCheia()){ avisaUtiCheia(); return; }
+      itens.unshift({id:id(), txt:txt, cor:"v", leito:true, desde:Date.now()});
+    }else{
+      itens.unshift({id:id(), txt:txt, cor:escolha, leito:false});
+    }
+    campo.value = ""; salvar(); pintar(); campo.focus();
+  });
+});
+$("#campo").addEventListener("keydown", function(e){ if(e.key === "Enter") $("#btn-triar").click(); });
+$("#btn-musica").addEventListener("click", sorteiaArtista);
+$("#btn-altas").addEventListener("click", function(){ altasAbertas = !altasAbertas; pintaAltas(); });
+$("#btn-mais").addEventListener("click", function(){
+  var caixa = $("#sobre-mais"), abrindo = caixa.hidden;
+  caixa.hidden = !abrindo;
+  this.setAttribute("aria-expanded", abrindo ? "true" : "false");
+  $("#rotulo-mais").textContent = abrindo ? "Ocultar" : "De onde veio a ideia";
+});
+
+document.addEventListener("click", function(e){
+  var t = e.target.closest("button");
+  if(!t){ fechaMenu(); return; }
+
+  if(t.dataset.escolha){
+    var cb = aoEscolher; var cor = t.dataset.escolha;
+    fechaMenu(); if(cb) cb(cor); return;
+  }
+  if(menu.classList.contains("aberto") && !menu.contains(t)) fechaMenu();
+
+  if(t.dataset.triagem){
+    e.stopPropagation();
+    var alvo = t.dataset.triagem;
+    abreMenu(t, "Reclassificar esta tarefa", OPS_RETRIAGEM, function(cor){
+      var p = pos(alvo);
+      if(p > -1){ itens[p].cor = cor; if(cor === "p") itens[p].leito = false; salvar(); pintar(); }
+    });
+    return;
+  }
+  if(t.dataset.editar){ editando = t.dataset.editar; pintar(); return; }
+  if(t.dataset.cancelar){ editando = null; pintar(); return; }
+  if(t.dataset.salvar){
+    var campoE = document.getElementById("edit-input");
+    var pE = pos(t.dataset.salvar);
+    if(campoE && pE > -1){
+      var novoTxt = campoE.value.trim();
+      if(novoTxt) itens[pE].txt = novoTxt;
+    }
+    editando = null; salvar(); pintar(); return;
+  }
+  if(t.id === "backup-agora"){ exportar(); return; }
+  if(t.id === "backup-depois"){ adiado = Date.now(); salvar(); pintar(); return; }
+  if(t.id === "fecha-aviso"){ avisoDia = hojeStr(); salvar(); pintar(); return; }
+
+  if(t.dataset.filtro){ filtro = t.dataset.filtro; pintar(); return; }
+  if(t.dataset.uti){
+    if(utiCheia()){ avisaUtiCheia(); return; }
+    var p1 = pos(t.dataset.uti);
+    if(p1 > -1){ itens[p1].leito = true; itens[p1].desde = Date.now(); salvar(); pintar(); }
+    return;
+  }
+  if(t.dataset.tirar){
+    var p2 = pos(t.dataset.tirar);
+    if(p2 > -1){ itens[p2].leito = false; delete itens[p2].desde; salvar(); pintar(); }
+    return;
+  }
+  if(t.dataset.alta){
+    var p4 = pos(t.dataset.alta);
+    if(p4 > -1){
+      var it = itens[p4];
+      altas.unshift({id:it.id, txt:it.txt, cor:it.cor, tipo:(it.cor === "p" ? "descarte" : "alta"), quando:Date.now()});
+      itens.splice(p4,1); salvar(); pintar();
+    }
+    return;
+  }
+  if(t.id === "btn-limpar-altas"){
+    if(confirm("Apagar todo o histórico de altas?")){ altas = []; salvar(); pintar(); }
+    return;
+  }
+  if(t.id === "btn-limpar"){
+    if(confirm("Apagar tudo — sala de espera, UTI e histórico de altas?\n\nNão dá para desfazer. Você realmente tem certeza disso?")){
+      itens = []; altas = []; filtro = "todos"; editando = null; salvar(); pintar();
+    }
+    return;
+  }
+});
+
+sorteiaArtista();
+if(!backup){ backup = Date.now(); salvar(); }
+pintar();
+})();
+</script>
+</body>
+</html>
