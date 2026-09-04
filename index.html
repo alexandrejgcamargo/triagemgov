@@ -247,8 +247,46 @@ footer .acoes{display:flex;gap:8px;flex-wrap:wrap}
 .rod-uti{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
 kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:var(--papel-2);border:1px solid var(--linha);color:var(--tinta)}
 
+/* tour de boas-vindas */
+.tour-alvo{position:relative;z-index:96;border-radius:14px;box-shadow:0 0 0 4px var(--acento),0 0 0 9999px var(--overlay)!important}
+.tour-card{position:fixed;z-index:97;background:var(--carta);color:var(--tinta);border-radius:var(--r-m);box-shadow:0 18px 48px rgba(0,0,0,.3);padding:18px 20px;width:min(340px,calc(100vw - 32px));font-size:16px;line-height:1.45}
+.tour-card .passo-n{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acento-txt);margin-bottom:6px}
+.tour-card b{display:block;font-family:Fraunces,serif;font-size:19px;margin-bottom:4px}
+.tour-card p{color:var(--tinta-fraca);font-size:15px}
+.tour-card .acoes{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.tour-card .pular{color:var(--tinta-fraca);padding:9px 12px;border-radius:var(--r-p)}
+.tour-card .pular:hover{background:var(--papel-2)}
+@media (max-width:640px){.tour-card{left:16px!important;right:16px;width:auto;top:auto!important;bottom:16px}}
+@keyframes treme{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.treme{animation:treme .4s ease}
 @keyframes piscar{0%,92%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.08)}}
 .pisca{animation:piscar 5.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+
+/* cena: um dia inteiro a cada 60 segundos */
+@keyframes ceu{0%,38%{fill:#CFEAF2}46%{fill:#F2BE86}52%,88%{fill:#1F2D4F}95%{fill:#F2BE86}100%{fill:#CFEAF2}}
+@keyframes morro{0%,40%{fill:#B6DCE8}50%,88%{fill:#25355A}98%,100%{fill:#B6DCE8}}
+@keyframes sol{0%,34%{transform:translateY(0)}48%,90%{transform:translateY(70px)}100%{transform:translateY(0)}}
+@keyframes lua{0%,46%{opacity:0;transform:translateY(34px)}56%,86%{opacity:1;transform:translateY(0)}94%,100%{opacity:0;transform:translateY(34px)}}
+@keyframes estrelas{0%,50%{opacity:0}58%,84%{opacity:1}92%,100%{opacity:0}}
+@keyframes cintila{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes gira{to{transform:rotate(360deg)}}
+@keyframes cresce{0%,6%{stroke-dashoffset:100}78%{stroke-dashoffset:0}88%{stroke-dashoffset:0}92%,100%{stroke-dashoffset:100}}
+@keyframes roboDir{0%,76%{transform:translateX(170px)}81%,91%{transform:translateX(0)}96%,100%{transform:translateX(170px)}}
+@keyframes roboEsq{0%,76%{transform:translateX(-170px)}81%,91%{transform:translateX(0)}96%,100%{transform:translateX(-170px)}}
+@keyframes snip{0%,82%{transform:rotate(0)}83%{transform:rotate(-30deg)}84%{transform:rotate(0)}85%{transform:rotate(-30deg)}86%{transform:rotate(0)}87%{transform:rotate(-30deg)}88%,100%{transform:rotate(0)}}
+.ceu{animation:ceu 60s linear infinite}
+.morro{animation:morro 60s linear infinite}
+.sol{animation:sol 60s linear infinite}
+.lua{animation:lua 60s linear infinite}
+.estrelas{animation:estrelas 60s linear infinite}
+.cintila{animation:cintila 1.8s ease-in-out infinite}
+.pont-h{animation:gira 48s linear infinite}
+.pont-m{animation:gira 4s linear infinite}
+.cipo{stroke-dasharray:100;stroke-dashoffset:100;animation:cresce 60s linear infinite}
+.folha{opacity:0;transform-box:fill-box;transform-origin:center}
+.robo-jardim.entra-dir{animation:roboDir 60s linear infinite}
+.robo-jardim.entra-esq{animation:roboEsq 60s linear infinite}
+.tesoura{transform-box:fill-box;transform-origin:0% 55%;animation:snip 60s linear infinite}
 @keyframes pensar{0%{opacity:0;transform:translateY(4px) scale(.85)}30%{opacity:.85}100%{opacity:0;transform:translateY(-7px) scale(1.12)}}
 .pensa{animation:pensar 3.8s ease-in-out infinite}
 .pensa.p2{animation-delay:1.25s}
@@ -299,17 +337,17 @@ kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:va
       <p>Três problemas para resolver e dar alta da mesa e da sua cabeça.</p>
     </div>
     <nav class="nav">
-      <button class="btn-icone" id="btn-tema" aria-label="Alternar modo escuro" title="Modo claro / escuro">
-        <svg id="ico-tema" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
-      </button>
       <button class="link-topo" id="btn-instalar" hidden>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4 19h16"/></svg>
         Instalar
       </button>
-      <a class="link-topo" href="#sobre">
+      <a class="link-topo" href="#sobre" id="link-como-usar">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v6"/><path d="M12 7.6v.1"/></svg>
-        Sobre
+        Como usar
       </a>
+      <button class="btn-icone" id="btn-tema" aria-label="Alternar modo escuro" title="Modo claro / escuro">
+        <svg id="ico-tema" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
     </nav>
   </header>
 
@@ -336,7 +374,7 @@ kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:va
     <div class="cab">
       <h2 id="h-nova">Opa, chegou nova tarefa na recepção!</h2>
     </div>
-    <p class="sub">Inclua aqui sua tarefa para a triagem.</p>
+    <p class="sub">Inclua abaixo sua tarefa para a triagem.</p>
     <div class="entrada">
       <label class="sr" for="campo">Descreva a demanda</label>
       <input type="text" id="campo" placeholder="Ex.: revisar a nota técnica antes do prazo" autocomplete="off">
@@ -361,79 +399,81 @@ kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:va
       </button>
     </p>
 
-    <svg class="cena" viewBox="0 0 800 160" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sala de espera com janela, relógio, cadeiras, revistas, café e plantas">
+    <svg class="cena" viewBox="0 0 800 160" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sala de espera animada: o dia vira noite na janela, o relógio anda, uma trepadeira cresce e um robô jardineiro a poda">
       <rect width="800" height="160" fill="#F5FAF9"/>
       <rect y="132" width="800" height="28" fill="#DCEDE9"/>
-      <!-- janela com moldura -->
-      <rect x="52" y="16" width="90" height="76" rx="10" fill="#E8D5B7"/>
-      <rect x="60" y="24" width="74" height="60" rx="6" fill="#CFEAF2"/>
-      <circle cx="118" cy="40" r="9" fill="#F0A81E"/>
-      <path d="M60 62q18-13 37 0t37-2v14a6 6 0 0 1-6 6H66a6 6 0 0 1-6-6z" fill="#B6DCE8"/>
-      <path d="M97 24v60M60 54h74" stroke="#E8D5B7" stroke-width="5"/>
+      <!-- janela -->
+      <rect x="40" y="18" width="112" height="76" rx="10" fill="#E8D5B7"/>
+      <clipPath id="jd"><rect x="48" y="26" width="96" height="60" rx="6"/></clipPath>
+      <g clip-path="url(#jd)">
+        <rect class="ceu" x="48" y="26" width="96" height="60" fill="#CFEAF2"/>
+        <g class="estrelas" fill="#fff"><circle cx="60" cy="34" r="1.4"/><circle cx="80" cy="30" r="1"/><circle cx="104" cy="36" r="1.6" class="cintila"/><circle cx="128" cy="31" r="1.1"/><circle cx="70" cy="46" r="1.2" class="cintila"/><circle cx="118" cy="48" r="1"/><circle cx="92" cy="40" r=".9"/></g>
+        <circle class="sol" cx="118" cy="44" r="10" fill="#F0A81E"/>
+        <path class="lua" d="M74 36a9 9 0 1 0 8 13 7 7 0 1 1-8-13z" fill="#F6E7B5"/>
+        <path class="morro" d="M48 72q18-14 40 0t44-1q8-3 12 4v11H48z" fill="#B6DCE8"/>
+      </g>
+      <path d="M96 26v60M48 56h96" stroke="#E8D5B7" stroke-width="5"/>
       <!-- relógio -->
       <circle cx="400" cy="46" r="22" fill="#fff"/>
       <circle cx="400" cy="46" r="22" fill="none" stroke="#DCEDE9" stroke-width="4"/>
-      <path d="M400 34v12l8 5" stroke="#95AFB1" stroke-width="3.4" stroke-linecap="round" fill="none"/>
-      <!-- quadro colorido -->
-      <rect x="636" y="20" width="82" height="62" rx="10" fill="#E8D5B7"/>
-      <rect x="644" y="28" width="66" height="46" rx="5" fill="#FDF3DF"/>
-      <circle cx="694" cy="41" r="7" fill="#F0A81E"/>
-      <path d="M644 62l18-20 13 14 10-11 25 27v2a5 5 0 0 1-5 4h-56a5 5 0 0 1-5-5z" fill="#7FCCC5"/>
-      <path d="M644 66l16-14 14 11 12-9 24 20v1a5 5 0 0 1-5 4h-56a5 5 0 0 1-5-5z" fill="#2FAE73"/>
-      <path d="M660 74h50" stroke="#5CC694" stroke-width="4" stroke-linecap="round"/>
-      <!-- fileira de cadeiras -->
-      <g fill="#7FCCC5">
-        <rect x="196" y="60" width="46" height="22" rx="10"/>
-        <rect x="252" y="60" width="46" height="22" rx="10"/>
-        <rect x="308" y="60" width="46" height="22" rx="10"/>
-      </g>
+      <g stroke="#DCEDE9" stroke-width="2" stroke-linecap="round"><path d="M400 28v3M400 61v3M382 46h3M415 46h3"/></g>
+      <line class="pont-h" x1="400" y1="46" x2="400" y2="36" stroke="#4C6B6F" stroke-width="3.4" stroke-linecap="round" style="transform-origin:400px 46px"/>
+      <line class="pont-m" x1="400" y1="46" x2="400" y2="29" stroke="#4C6B6F" stroke-width="2.6" stroke-linecap="round" style="transform-origin:400px 46px"/>
+      <circle cx="400" cy="46" r="2.2" fill="#4C6B6F"/>
+      <!-- quadro -->
+      <rect x="632" y="22" width="82" height="60" rx="8" fill="#E8D5B7"/><clipPath id="qd"><rect x="640" y="30" width="66" height="44" rx="4"/></clipPath><g clip-path="url(#qd)"><rect x="640" y="30" width="66" height="44" fill="#F6E7B5"/><rect x="640" y="30" width="66" height="16" fill="#8FC4D6"/><circle cx="694" cy="40" r="9" fill="#F0A81E"/><path d="M640 74q22-30 44-8t22 8z" fill="#22A05B"/><circle cx="656" cy="66" r="14" fill="#C8562F"/><path d="M672 74l10-24 10 24z" fill="#1B8FA8" opacity=".85"/></g>
+      <!-- banco -->
+      <g fill="#7FCCC5"><rect x="196" y="60" width="46" height="22" rx="10"/><rect x="252" y="60" width="46" height="22" rx="10"/><rect x="308" y="60" width="46" height="22" rx="10"/></g>
       <rect x="190" y="82" width="170" height="15" rx="7.5" fill="#1B8FA8"/>
-      <g stroke="#B9D6D2" stroke-width="6" stroke-linecap="round">
-        <path d="M204 97v32"/><path d="M346 97v32"/>
-      </g>
+      <g stroke="#B9D6D2" stroke-width="6" stroke-linecap="round"><path d="M204 97v32"/><path d="M346 97v32"/></g>
       <!-- mesinha com revistas -->
       <rect x="424" y="94" width="104" height="11" rx="5.5" fill="#E8D5B7"/>
       <path d="M440 105v26M512 105v26" stroke="#E8D5B7" stroke-width="7" stroke-linecap="round"/>
       <rect x="440" y="82" width="62" height="10" rx="5" fill="#F0A81E"/>
       <rect x="446" y="72" width="62" height="10" rx="5" fill="#E05243"/>
       <rect x="442" y="62" width="56" height="10" rx="5" fill="#7FCCC5"/>
-      <!-- mesinha de apoio com o cafezinho -->
-      <rect x="540" y="100" width="66" height="10" rx="5" fill="#E8D5B7"/>
-      <path d="M552 110v22M594 110v22" stroke="#E8D5B7" stroke-width="6" stroke-linecap="round"/>
-      <path d="M556 72h30v18a10 10 0 0 1-10 10h-10a10 10 0 0 1-10-10z" fill="#fff"/>
-      <path d="M586 77h6a8 8 0 0 1 0 16h-6" fill="none" stroke="#DCEDE9" stroke-width="4"/>
-      <path d="M556 72h30v6h-30z" fill="#E05243"/>
+      <!-- mesinha do café -->
+      <rect x="548" y="100" width="56" height="9" rx="4.5" fill="#E8D5B7"/>
+      <path d="M556 109v22M596 109v22" stroke="#E8D5B7" stroke-width="6" stroke-linecap="round"/>
+      <path d="M560 72h30v20a10 10 0 0 1-10 10h-10a10 10 0 0 1-10-10z" fill="#0F2C31"/>
+      <path d="M590 77h7a8 8 0 0 1 0 16h-7" fill="none" stroke="#0F2C31" stroke-width="4"/>
+      <path d="M560 72h30v5h-30z" fill="#6B4A2B"/>
       <g stroke="#B9D6D2" stroke-width="3.4" stroke-linecap="round" fill="none">
-        <path class="vapor" d="M564 64c3-4-3-7 0-11"/>
-        <path class="vapor" d="M572 64c3-4-3-7 0-11"/>
-        <path class="vapor" d="M580 64c3-4-3-7 0-11"/>
+        <path class="vapor" d="M567 64c3-4-3-7 0-11"/><path class="vapor" d="M575 64c3-4-3-7 0-11"/><path class="vapor" d="M583 64c3-4-3-7 0-11"/>
       </g>
-      <!-- planta grande -->
-      <path d="M754 130V88" stroke="#2FAE73" stroke-width="4.5" stroke-linecap="round"/>
-      <path d="M754 98c-18-2-27-13-27-27 16 0 27 12 27 27z" fill="#2FAE73"/>
-      <path d="M754 88c18-4 25-16 23-30-16 2-25 15-23 30z" fill="#5CC694"/>
-      <path d="M754 110c-14 2-22 11-23 22 13 1 22-9 23-22z" fill="#5CC694"/>
+      <!-- planta trepadeira -->
       <path d="M732 126h44l-5 24a7 7 0 0 1-7 6h-20a7 7 0 0 1-7-6z" fill="#E8D5B7"/>
-      <!-- planta pequena -->
-      <path d="M626 132v-15" stroke="#2FAE73" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M626 121c-10-1-15-8-15-16 9 0 15 7 15 16z" fill="#5CC694"/>
-      <path d="M626 117c10-2 14-9 13-17-9 1-14 9-13 17z" fill="#2FAE73"/>
-      <path d="M613 128h26l-3 17a6 6 0 0 1-6 5h-8a6 6 0 0 1-6-5z" fill="#F0A81E"/>
+      <path d="M754 130V98" stroke="#22A05B" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M754 104c-16-2-24-12-24-25 15 0 24 11 24 25z" fill="#22A05B"/>
+      <path d="M754 96c16-4 22-15 20-28-14 2-22 14-20 28z" fill="#5CC694"/>
+      <path class="cipo" pathLength="100" d="M760 112c26-14 34-44 30-72-3-22-24-30-52-26-34 5-70 6-104 2-40-5-64 6-94 4" fill="none" stroke="#22A05B" stroke-width="3.2" stroke-linecap="round"/>
+      <ellipse class="folha fd0" cx="781" cy="88" rx="7" ry="4" transform="rotate(-60 781 88)" fill="#5CC694"/><ellipse class="folha fd1" cx="790" cy="62" rx="7" ry="4" transform="rotate(-80 790 62)" fill="#22A05B"/><ellipse class="folha fd2" cx="782" cy="36" rx="7" ry="4" transform="rotate(-40 782 36)" fill="#5CC694"/><ellipse class="folha fd3" cx="752" cy="18" rx="7" ry="4" transform="rotate(10 752 18)" fill="#22A05B"/><ellipse class="folha fd4" cx="716" cy="20" rx="7" ry="4" transform="rotate(-8 716 20)" fill="#5CC694"/><ellipse class="folha fd5" cx="680" cy="22" rx="7" ry="4" transform="rotate(6 680 22)" fill="#22A05B"/><ellipse class="folha fd6" cx="640" cy="18" rx="7" ry="4" transform="rotate(-6 640 18)" fill="#5CC694"/><ellipse class="folha fd7" cx="600" cy="20" rx="7" ry="4" transform="rotate(8 600 20)" fill="#22A05B"/><ellipse class="folha fd8" cx="568" cy="16" rx="7" ry="4" transform="rotate(-10 568 16)" fill="#5CC694"/><ellipse class="folha fd9" cx="540" cy="20" rx="7" ry="4" transform="rotate(6 540 20)" fill="#22A05B"/>
+      <g transform="translate(690,72)"><g class="robo-jardim entra-dir"><rect x="0" y="0" width="26" height="22" rx="7" fill="#C6D9D6"/><rect x="4" y="4" width="18" height="11" rx="4" fill="#0F2C31"/><circle cx="9" cy="9.5" r="2.4" fill="#fff"/><circle cx="17" cy="9.5" r="2.4" fill="#fff"/><path d="M13 0v-4" stroke="#95AFB1" stroke-width="2.4" stroke-linecap="round"/><circle cx="13" cy="-6" r="2.4" fill="#E05243"/><rect x="2" y="24" width="22" height="20" rx="6" fill="#1B8FA8"/><rect x="7" y="28" width="12" height="7" rx="2.5" fill="#fff" opacity=".6"/><circle cx="13" cy="49" r="6" fill="#0F2C31"/><circle cx="13" cy="49" r="2.4" fill="#fff"/><path d="M24 30l12-9" stroke="#95AFB1" stroke-width="5" stroke-linecap="round"/><g class="tesoura"><path d="M36 21l13-9" stroke="#7F9A9C" stroke-width="3.2" stroke-linecap="round"/><path d="M36 21l13 5" stroke="#7F9A9C" stroke-width="3.2" stroke-linecap="round"/><circle cx="36" cy="21" r="2.6" fill="#0F2C31"/></g></g></g>
     </svg>
 
-    <svg class="cena cena-m" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sala de espera">
+    <svg class="cena cena-m" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sala de espera animada: o dia vira noite na janela, o relógio anda, uma trepadeira cresce e um robô jardineiro a poda">
       <rect width="400" height="260" fill="#F5FAF9"/>
       <rect y="212" width="400" height="48" fill="#DCEDE9"/>
       <!-- janela -->
       <rect x="30" y="26" width="118" height="90" rx="12" fill="#E8D5B7"/>
-      <rect x="40" y="36" width="98" height="70" rx="8" fill="#CFEAF2"/>
-      <circle cx="112" cy="58" r="12" fill="#F0A81E"/>
-      <path d="M40 92q18-16 40-2t44-4q10-2 14 6v10a4 4 0 0 1-4 4H44a4 4 0 0 1-4-4z" fill="#B6DCE8"/>
+      <clipPath id="jm"><rect x="40" y="36" width="98" height="70" rx="8"/></clipPath>
+      <g clip-path="url(#jm)">
+        <rect class="ceu" x="40" y="36" width="98" height="70" fill="#CFEAF2"/>
+        <g class="estrelas" fill="#fff"><circle cx="52" cy="46" r="1.6"/><circle cx="76" cy="42" r="1.2" class="cintila"/><circle cx="100" cy="48" r="1.8"/><circle cx="124" cy="44" r="1.2"/><circle cx="64" cy="60" r="1.3" class="cintila"/><circle cx="114" cy="62" r="1.1"/><circle cx="88" cy="54" r="1"/></g>
+        <circle class="sol" cx="112" cy="58" r="12" fill="#F0A81E"/>
+        <path class="lua" d="M66 48a11 11 0 1 0 10 16 8.5 8.5 0 1 1-10-16z" fill="#F6E7B5"/>
+        <path class="morro" d="M40 92q18-16 40-2t44-4q10-2 14 6v14H40z" fill="#B6DCE8"/>
+      </g>
       <path d="M89 36v70M40 71h98" stroke="#E8D5B7" stroke-width="6"/>
+      <!-- quadro -->
+      <rect x="170" y="34" width="84" height="62" rx="8" fill="#E8D5B7"/><clipPath id="qm"><rect x="178" y="42" width="68" height="46" rx="4"/></clipPath><g clip-path="url(#qm)"><rect x="178" y="42" width="68" height="46" fill="#F6E7B5"/><rect x="178" y="42" width="68" height="17" fill="#8FC4D6"/><circle cx="233" cy="53" r="9" fill="#F0A81E"/><path d="M178 88q22-30 46-8t22 8z" fill="#22A05B"/><circle cx="195" cy="80" r="14" fill="#C8562F"/><path d="M212 88l10-24 10 24z" fill="#1B8FA8" opacity=".85"/></g>
       <!-- relógio -->
-      <circle cx="300" cy="62" r="30" fill="#fff"/>
-      <circle cx="300" cy="62" r="30" fill="none" stroke="#DCEDE9" stroke-width="5"/>
-      <path d="M300 44v18l12 8" stroke="#7F9A9C" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <circle cx="310" cy="62" r="30" fill="#fff"/>
+      <circle cx="310" cy="62" r="30" fill="none" stroke="#DCEDE9" stroke-width="5"/>
+      <g stroke="#DCEDE9" stroke-width="2.4" stroke-linecap="round"><path d="M310 38v4M310 82v4M286 62h4M330 62h4"/></g>
+      <line class="pont-h" x1="310" y1="62" x2="310" y2="48" stroke="#4C6B6F" stroke-width="4.5" stroke-linecap="round" style="transform-origin:310px 62px"/>
+      <line class="pont-m" x1="310" y1="62" x2="310" y2="40" stroke="#4C6B6F" stroke-width="3.2" stroke-linecap="round" style="transform-origin:310px 62px"/>
+      <circle cx="310" cy="62" r="3" fill="#4C6B6F"/>
       <!-- banco -->
       <g fill="#7FCCC5"><rect x="118" y="130" width="52" height="24" rx="11"/><rect x="180" y="130" width="52" height="24" rx="11"/><rect x="242" y="130" width="52" height="24" rx="11"/></g>
       <rect x="110" y="154" width="192" height="17" rx="8.5" fill="#1B8FA8"/>
@@ -441,18 +481,20 @@ kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:va
       <!-- mesinha com café -->
       <rect x="312" y="172" width="70" height="11" rx="5.5" fill="#E8D5B7"/>
       <path d="M324 183v26M370 183v26" stroke="#E8D5B7" stroke-width="7" stroke-linecap="round"/>
-      <path d="M332 146h28v18a10 10 0 0 1-10 10h-8a10 10 0 0 1-10-10z" fill="#fff"/>
-      <path d="M360 151h6a7 7 0 0 1 0 14h-6" fill="none" stroke="#DCEDE9" stroke-width="4"/>
-      <path d="M332 146h28v6h-28z" fill="#E8D5B7"/>
+      <path d="M332 146h28v18a10 10 0 0 1-10 10h-8a10 10 0 0 1-10-10z" fill="#0F2C31"/>
+      <path d="M360 151h6a7 7 0 0 1 0 14h-6" fill="none" stroke="#0F2C31" stroke-width="4"/>
+      <path d="M332 146h28v5h-28z" fill="#6B4A2B"/>
       <g stroke="#B9D6D2" stroke-width="3.4" stroke-linecap="round" fill="none">
         <path class="vapor" d="M339 138c3-4-3-7 0-11"/><path class="vapor" d="M346 138c3-4-3-7 0-11"/><path class="vapor" d="M353 138c3-4-3-7 0-11"/>
       </g>
-      <!-- planta -->
-      <path d="M62 210v-46" stroke="#22A05B" stroke-width="5" stroke-linecap="round"/>
-      <path d="M62 176c-20-2-30-14-30-30 18 0 30 14 30 30z" fill="#22A05B"/>
-      <path d="M62 166c20-4 28-18 26-34-18 2-28 16-26 34z" fill="#5CC694"/>
-      <path d="M62 190c-15 2-24 12-25 24 14 1 24-10 25-24z" fill="#5CC694"/>
+      <!-- planta trepadeira -->
       <path d="M36 206h52l-6 30a8 8 0 0 1-8 7H50a8 8 0 0 1-8-7z" fill="#E8D5B7"/>
+      <path d="M62 210v-40" stroke="#22A05B" stroke-width="5" stroke-linecap="round"/>
+      <path d="M62 180c-20-2-30-14-30-30 18 0 30 14 30 30z" fill="#22A05B"/>
+      <path d="M62 170c20-4 28-18 26-34-18 2-28 16-26 34z" fill="#5CC694"/>
+      <path class="cipo" pathLength="100" d="M56 190c-26-16-40-52-38-96 2-36 20-70 60-76 30-4 62 0 92 6" fill="none" stroke="#22A05B" stroke-width="3.6" stroke-linecap="round"/>
+      <ellipse class="folha fm0" cx="34" cy="176" rx="7" ry="4" transform="rotate(-50 34 176)" fill="#5CC694"/><ellipse class="folha fm1" cx="22" cy="146" rx="7" ry="4" transform="rotate(-80 22 146)" fill="#22A05B"/><ellipse class="folha fm2" cx="18" cy="112" rx="7" ry="4" transform="rotate(-90 18 112)" fill="#5CC694"/><ellipse class="folha fm3" cx="22" cy="78" rx="7" ry="4" transform="rotate(-70 22 78)" fill="#22A05B"/><ellipse class="folha fm4" cx="38" cy="46" rx="7" ry="4" transform="rotate(-40 38 46)" fill="#5CC694"/><ellipse class="folha fm5" cx="66" cy="24" rx="7" ry="4" transform="rotate(-10 66 24)" fill="#22A05B"/><ellipse class="folha fm6" cx="104" cy="16" rx="7" ry="4" transform="rotate(6 104 16)" fill="#5CC694"/><ellipse class="folha fm7" cx="140" cy="16" rx="7" ry="4" transform="rotate(-6 140 16)" fill="#22A05B"/><ellipse class="folha fm8" cx="168" cy="20" rx="7" ry="4" transform="rotate(8 168 20)" fill="#5CC694"/>
+      <g transform="translate(140,152) scale(-1,1)"><g class="robo-jardim entra-dir"><rect x="0" y="0" width="26" height="22" rx="7" fill="#C6D9D6"/><rect x="4" y="4" width="18" height="11" rx="4" fill="#0F2C31"/><circle cx="9" cy="9.5" r="2.4" fill="#fff"/><circle cx="17" cy="9.5" r="2.4" fill="#fff"/><path d="M13 0v-4" stroke="#95AFB1" stroke-width="2.4" stroke-linecap="round"/><circle cx="13" cy="-6" r="2.4" fill="#E05243"/><rect x="2" y="24" width="22" height="20" rx="6" fill="#1B8FA8"/><rect x="7" y="28" width="12" height="7" rx="2.5" fill="#fff" opacity=".6"/><circle cx="13" cy="49" r="6" fill="#0F2C31"/><circle cx="13" cy="49" r="2.4" fill="#fff"/><path d="M24 30l12-9" stroke="#95AFB1" stroke-width="5" stroke-linecap="round"/><g class="tesoura"><path d="M36 21l13-9" stroke="#7F9A9C" stroke-width="3.2" stroke-linecap="round"/><path d="M36 21l13 5" stroke="#7F9A9C" stroke-width="3.2" stroke-linecap="round"/><circle cx="36" cy="21" r="2.6" fill="#0F2C31"/></g></g></g>
     </svg>
 
     <div class="filtros" id="filtros"></div>
@@ -481,25 +523,22 @@ kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:va
   <!-- SOBRE -->
   <section class="bloco sobre" id="sobre" aria-labelledby="h-sobre">
     <div class="cab">
-      <h2 id="h-sobre">Sobre a ferramenta</h2>
+      <h2 id="h-sobre">Como usar</h2>
     </div>
+    <p class="sub"><span>Num pronto-socorro ninguém atende por ordem de chegada nem por quem grita mais alto. Atende-se por <b>consequência da espera</b>. É isso que esta ferramenta faz com a sua lista de trabalho.</span></p>
 
-    <p>Num pronto-socorro ninguém atende por ordem de chegada nem por quem grita mais alto. Atende-se por <b>consequência da espera</b>. É isso que esta ferramenta faz com a sua lista de trabalho: você descreve a demanda, escolhe a cor e leva três — só três — para a UTI do dia.</p>
-
-    <div class="passos">
-      <div class="passo"><div class="n">1</div><b>Você descreve</b><span>A demanda como ela chegou.</span></div>
-      <div class="passo"><div class="n">2</div><b>Você classifica</b><span>Escolhe a cor, guiado pela pergunta: o que acontece se isso esperar?</span></div>
-      <div class="passo"><div class="n">3</div><b>Três vão para a UTI</b><span>Três mesas por vez. O resto espera, e esperar não é fracasso.</span></div>
-    </div>
-
-    <p style="margin-top:16px">Tudo fica guardado <b>somente</b> no navegador, <b>somente</b> na sua máquina (de nada, LGPD!). Nada sai daqui e ninguém mais vê sua lista. Como consequência, limpar os dados de navegação (cache) apaga tudo. Mas temos uma solução: justamente por isso existe o botão <b>Baixar cópia</b> no rodapé, e um lembrete a cada sete dias.</p>
-
-    <button class="abrir-altas" id="btn-mais" aria-expanded="false" aria-controls="sobre-mais" style="margin-top:18px">
-      <span id="rotulo-mais">De onde veio a ideia</span>
+    <button class="abrir-altas" id="btn-como-usar" aria-expanded="false" aria-controls="como-usar">
+      <span id="rotulo-como-usar">Ver como usar</span>
       <svg class="seta" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5 12 15.5 18 9.5"/></svg>
     </button>
 
-    <div id="sobre-mais" hidden>
+    <div id="como-usar" hidden>
+      <div class="passos">
+        <div class="passo"><div class="n">1</div><b>Você descreve</b><span>A demanda como ela chegou.</span></div>
+        <div class="passo"><div class="n">2</div><b>Você classifica</b><span>Escolhe a cor, guiado pela pergunta: o que acontece se isso esperar?</span></div>
+        <div class="passo"><div class="n">3</div><b>Três vão para a UTI</b><span>Três mesas por vez. O resto espera, e esperar não é fracasso.</span></div>
+      </div>
+
       <h3>As quatro cores</h3>
       <p>
         <b style="color:var(--vermelho-txt)">Vermelho</b> — a espera custa caro: prazo estoura, trava outra pessoa.<br>
@@ -508,15 +547,27 @@ kbd{font:inherit;font-size:.85em;padding:2px 7px;border-radius:6px;background:va
         <b style="color:var(--preto-txt)">Preto</b> — não é seu, já passou, ou nunca existiu de verdade. Sai da lista e sai da cabeça.
       </p>
 
-      <h3>A origem</h3>
-      <p>A ideia central é da médica emergencista <b>Darria Long</b>, na palestra <a href="https://www.ted.com/talks/darria_long_an_er_doctor_on_triaging_your_crazy_busy_life" target="_blank" rel="noopener">“An ER doctor on triaging your crazy busy life”</a> (TEDx Naperville, 2019). Ela descreve a passagem do “modo louco” para o <b>modo pronto</b>: em vez de reagir a tudo com a mesma intensidade, classificar por grau de urgência. O argumento não é de produtividade, é de fisiologia — ela cita a pesquisa de Robert Sapolsky segundo a qual quem não distingue ameaça de não-ameaça e reage igual a tudo carrega o dobro de hormônio do estresse.</p>
-      <p style="margin-top:10px">O limite de três mesas vem do <b>limite de trabalho em andamento</b> do Kanban: fila infinita não entrega mais rápido, entrega mais devagar. O bloco de hoje corresponde ao que Long chama de <b>Key 3</b>.</p>
-
       <h3>Atalhos de teclado</h3>
       <p><kbd>N</kbd> vai direto ao campo de nova tarefa. Com o menu de cores aberto, <kbd>1</kbd> a <kbd>4</kbd> escolhem a opção. <kbd>Esc</kbd> fecha o que estiver aberto. <kbd>Z</kbd> desfaz a última alta, enquanto o aviso estiver na tela.</p>
 
-      <h3>Onde a ideia foi gestada</h3>
-      <p>Esta ferramenta foi criada por <a href="https://alecamargo.me" target="_blank" rel="noopener">Alexandre Camargo</a> e nasceu durante a 2ª edição do curso <b>“Servidores do Futuro: Gestão de Pessoas”</b>, da Enap, ministrado por <b>Mariana Dalcanale</b>.</p>
+      <p style="margin-top:14px"><button class="mini" id="btn-tour">Rever o tour de boas-vindas</button></p>
+
+      <h3>Seus dados</h3>
+      <p>Tudo fica guardado <b>somente</b> no navegador, <b>somente</b> na sua máquina (de nada, LGPD!). Nada sai daqui e ninguém mais vê sua lista. Como consequência, limpar os dados de navegação (cache) apaga tudo. Mas temos uma solução: justamente por isso existe o botão <b>Baixar cópia</b> no rodapé, e um lembrete a cada sete dias.</p>
+
+      <button class="abrir-altas" id="btn-mais" aria-expanded="false" aria-controls="sobre-mais" style="margin-top:18px">
+        <span id="rotulo-mais">De onde veio a ideia</span>
+        <svg class="seta" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5 12 15.5 18 9.5"/></svg>
+      </button>
+
+      <div id="sobre-mais" hidden>
+        <h3>A origem</h3>
+        <p>A ideia central é da médica emergencista <b>Darria Long</b>, na palestra <a href="https://www.ted.com/talks/darria_long_an_er_doctor_on_triaging_your_crazy_busy_life" target="_blank" rel="noopener">“An ER doctor on triaging your crazy busy life”</a> (TEDx Naperville, 2019). Ela descreve a passagem do “modo louco” para o <b>modo pronto</b>: em vez de reagir a tudo com a mesma intensidade, classificar por grau de urgência. O argumento não é de produtividade, é de fisiologia — ela cita a pesquisa de Robert Sapolsky segundo a qual quem não distingue ameaça de não-ameaça e reage igual a tudo carrega o dobro de hormônio do estresse.</p>
+        <p style="margin-top:10px">O limite de três mesas vem do <b>limite de trabalho em andamento</b> do Kanban: fila infinita não entrega mais rápido, entrega mais devagar. O bloco de hoje corresponde ao que Long chama de <b>Key 3</b>.</p>
+
+        <h3>Onde a ideia foi gestada</h3>
+        <p>Esta ferramenta foi criada por <a href="https://alecamargo.me" target="_blank" rel="noopener">Alexandre Camargo</a> e nasceu durante a 2ª edição do curso <b>“Servidores do Futuro: Gestão de Pessoas”</b>, da Enap, ministrado por <b>Mariana Dalcanale</b>.</p>
+      </div>
     </div>
   </section>
 
@@ -658,6 +709,21 @@ var FRASES_FIM = [
 ];
 function sorteia(lista){ return lista[Math.floor(Math.random() * lista.length)]; }
 
+
+/* folhas da trepadeira: cada uma brota num momento e todas caem quando o robô poda */
+(function(){
+  var css = "";
+  function gera(prefixo, n){
+    for(var i = 0; i < n; i++){
+      var a = 8 + Math.round(i * (68 / n)), b = Math.min(a + 3, 86);
+      css += "@keyframes " + prefixo + i + "{0%," + a + "%{opacity:0;transform:scale(0)}" + b + "%,89%{opacity:1;transform:scale(1)}92%,100%{opacity:0;transform:scale(0)}}" +
+             "." + prefixo + i + "{animation:" + prefixo + i + " 60s linear infinite}";
+    }
+  }
+  gera("fd", 10); gera("fm", 9);
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+})();
+
 /* ---------------- trilha sonora da sala de espera ---------------- */
 var ARTISTAS = [
  "Elis Regina","Tom Jobim","Chico Buarque","Caetano Veloso","Gilberto Gil","Gal Costa",
@@ -687,7 +753,7 @@ function sorteiaArtista(){
 function exemploItens(){
   return [
     {id:id(), txt:"Ex.: assinar o ofício que vence hoje às 18h — já perguntaram “e aquilo?” duas vezes", cor:"v", leito:true, desde:ONTEM, fig:0},
-    {id:id(), txt:"Ex.: fechar a nota técnica que volta amanhã da consultoria jurídica", cor:"v", leito:true, desde:ONTEM, fig:4},
+    {id:id(), txt:"Ex.: fechar a nota técnica que volta amanhã da consultoria jurídica", cor:"v", leito:true, desde:ONTEM, fig:5},
     {id:id(), txt:"Ex.: responder o e-mail que começa com “conforme alinhado” sobre algo que nunca foi alinhado", cor:"a", leito:false},
     {id:id(), txt:"Ex.: preencher o levantamento cujo prazo ninguém sabe qual é, mas todos temem", cor:"a", leito:false},
     {id:id(), txt:"Ex.: confirmar se a reunião de quinta continua de pé ou já virou e-mail", cor:"a", leito:false},
@@ -810,7 +876,7 @@ window.addEventListener("scroll", posicionaMenu, true);
 
 /* ---------------- desenho da mesa de trabalho ---------------- */
 /* cinco personagens, sorteados pelo id da tarefa (estável entre repinturas) */
-var FIGURAS = 5;
+var FIGURAS = 7;
 function figuraDe(txtId){
   var s = 7;
   for(var i = 0; i < txtId.length; i++) s = (s * 31 + txtId.charCodeAt(i)) % 100003;
@@ -906,24 +972,50 @@ function figDisquete(c){
     '<path d="M56 55q6 3.5 12 0" stroke="#C6D9D6" stroke-width="2.4" stroke-linecap="round" fill="none"/>';
 }
 
-/* 4 — hominho palito */
-function figPalito(c){
-  return '<g stroke="' + c + '" stroke-width="4" stroke-linecap="round" fill="none">' +
-      '<circle cx="62" cy="30" r="15" fill="#FFFFFF"/>' +
-      '<path d="M62 45v25"/>' +
-      '<path d="M62 52L44 64"/>' +
-      '<path d="M62 52q16 3 33 17"/>' +
-      '<path d="M62 70l-11 12M62 70l11 12"/>' +
-    "</g>" +
-    (_dormindo
-      ? '<path d="M53 27q3 3 6 0M65 27q3 3 6 0" stroke="#0F2C31" stroke-width="2.4" stroke-linecap="round" fill="none"/>'
-      : '<g class="pisca" style="animation-delay:' + _atrasoPisca + 's"><circle cx="56" cy="27" r="2.6" fill="#0F2C31"/><circle cx="68" cy="27" r="2.6" fill="#0F2C31"/></g>') +
-    '<path d="M55 35q7 5 14 0" stroke="#0F2C31" stroke-width="2.6" stroke-linecap="round" fill="none"/>';
+/* 4 — cacto */
+function figCacto(c){
+  return braco("#22A05B", 9) +
+    '<rect x="49" y="18" width="26" height="60" rx="13" fill="#22A05B"/>' +
+    sombra("M66 18h-2c6 0 11 5 11 13v34c0 8-5 13-11 13h2c6 0 11-5 11-13V31c0-8-5-13-11-13z") +
+    luz("M52 26q2-5 7-6q-4 3-5 8z") +
+    '<path d="M49 40c-10-2-14-10-12-18 8 2 12 8 12 18z" fill="#5CC694"/>' +
+    '<g stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".85"><path d="M56 26v3M68 24v3M54 48v3M70 46v3M58 62v3M67 66v3"/></g>' +
+    '<ellipse cx="62" cy="17" rx="7" ry="5" fill="#F3A0B5"/><circle cx="62" cy="17" r="2.2" fill="#F0A81E"/>' +
+    olhos(56, 68, 36, 4.6) +
+    '<path d="M57 46q5 3 10 0" stroke="#15794A" stroke-width="2.4" stroke-linecap="round" fill="none"/>' +
+    '<path d="M40 64h44l-4 18H44z" fill="' + c + '"/>' +
+    sombra("M74 64h10l-4 18h-8z") +
+    '<rect x="37" y="60" width="50" height="8" rx="4" fill="' + c + '"/>' + luz("M40 60h12v8H40z");
 }
 
-var DESENHOS = [figDino, figRobo, figEt, figDisquete, figPalito];
-var MAOS = ["#2FAE73", "#95AFB1", "#5CC694", "#4A5A5E", null]; /* null = usa a cor da triagem */
-var NOMES_FIG = ["Dinossauro", "Robô", "Extraterrestre", "Disquete", "Boneco palito"];
+/* 5 — xícara de café */
+function figXicara(c){
+  return braco(c, 8) +
+    '<path d="M40 30h44v40a12 12 0 0 1-12 12H52a12 12 0 0 1-12-12z" fill="' + c + '"/>' +
+    sombra("M74 30h10v40a12 12 0 0 1-12 12h-2a12 12 0 0 0 4-12z") +
+    luz("M44 36h6v30h-6z") +
+    '<path d="M40 40h-6a9 9 0 0 0 0 18h6" fill="none" stroke="' + c + '" stroke-width="6" stroke-linecap="round"/>' +
+    '<ellipse cx="62" cy="30" rx="22" ry="6" fill="#FFFFFF"/>' +
+    '<ellipse cx="62" cy="30" rx="17" ry="3.8" fill="#6B4A2B"/>' +
+    olhos(55, 69, 52, 4.6) +
+    '<path d="M57 62q5 3.5 10 0" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".9"/>' +
+    '<ellipse cx="62" cy="82" rx="28" ry="4" fill="#FFFFFF" stroke="#DCEDE9" stroke-width="2"/>';
+}
+
+/* 6 — fantasminha */
+function figFantasma(c){
+  return braco(c, 8) +
+    '<path d="M40 44a22 22 0 0 1 44 0v36l-7-6-7 6-8-6-8 6-7-6-7 6z" fill="' + c + '"/>' +
+    sombra("M74 26a22 22 0 0 1 10 18v36l-7-6-3 2V44a22 22 0 0 0-5-14z") +
+    luz("M46 40q2-10 12-13q-7 5-8 15z") +
+    olhos(55, 69, 42, 5) +
+    '<ellipse cx="62" cy="54" rx="3.2" ry="4" fill="#0F2C31"/>' +
+    '<circle cx="50" cy="48" r="3.5" fill="#FFFFFF" opacity=".5"/><circle cx="74" cy="48" r="3.5" fill="#FFFFFF" opacity=".5"/>';
+}
+
+var DESENHOS = [figDino, figRobo, figEt, figDisquete, figCacto, figXicara, figFantasma];
+var MAOS = ["#2FAE73", "#95AFB1", "#5CC694", "#4A5A5E", "#22A05B", null, null]; /* null = cor da triagem */
+var NOMES_FIG = ["Dinossauro", "Robô", "Extraterrestre", "Disquete", "Cacto", "Xícara de café", "Fantasminha"];
 
 /* estágio de cansaço: 0 normal, 1 cansado (>=1 dia), 2 dormindo (>=3 dias) */
 function estagioDe(desde){
@@ -964,7 +1056,7 @@ function mesa(cor, vazio, chave, figFixa, estagio){
     "</g>";
 
   var mao = vazio ? "" :
-    '<circle cx="99" cy="72" r="' + (fig === 4 ? 4 : 5) + '" fill="' + (MAOS[fig] || c) + '"/>';
+    '<circle cx="99" cy="72" r="5" fill="' + (MAOS[fig] || c) + '"/>';
 
   var tela = vazio ? "#EDF2F2" : "#CFEAF2";
   var monitor =
@@ -1316,6 +1408,54 @@ document.addEventListener("keydown", function(e){
   if((e.key === "z" || e.key === "Z") && ultimaAlta){ desfazerAlta(); e.preventDefault(); return; }
 });
 
+/* ---------------- tour de boas-vindas ---------------- */
+var CHAVE_TOUR = "triagem.tour", tourPasso = -1, tourAlvo = null, tourCard = null;
+var TOUR = [
+  {sel:"#campo", tit:"Comece aqui", txt:"Escreva a tarefa como ela chegou e clique em Triar. Uma pergunta, quatro cores, sem formulário."},
+  {sel:"#leitos", tit:"Só três por vez", txt:"As três mesas são o que você realmente vai fazer hoje. Cheias? Alguém precisa sair antes de outro entrar."},
+  {sel:["#leitos button[data-mais]", "#lista .card button[data-mais]", "#btn-plantao"], tit:"O resto está nos três pontinhos", txt:"Editar, reclassificar e dar alta ficam atrás do ···. A tela mostra só o que importa."}
+];
+function tourJaVisto(){ try{ return localStorage.getItem(CHAVE_TOUR) === "1"; }catch(e){ return true; } }
+function marcaTour(){ try{ localStorage.setItem(CHAVE_TOUR, "1"); }catch(e){} }
+function tourLimpa(){
+  if(tourAlvo) tourAlvo.classList.remove("tour-alvo");
+  if(tourCard) tourCard.remove();
+  tourAlvo = null; tourCard = null;
+}
+function tourFim(){ tourLimpa(); tourPasso = -1; marcaTour(); }
+function tourMostra(n){
+  tourLimpa();
+  if(n >= TOUR.length){ tourFim(); return; }
+  tourPasso = n;
+  var sels = Array.isArray(TOUR[n].sel) ? TOUR[n].sel : [TOUR[n].sel], alvo = null;
+  for(var s = 0; s < sels.length && !alvo; s++) alvo = document.querySelector(sels[s]);
+  if(!alvo){ tourMostra(n + 1); return; }
+  tourAlvo = alvo; alvo.classList.add("tour-alvo");
+  alvo.scrollIntoView({block:"center"});
+  var card = document.createElement("div");
+  card.className = "tour-card"; card.setAttribute("role","dialog"); card.setAttribute("aria-label","Dica " + (n+1) + " de " + TOUR.length);
+  card.innerHTML = '<div class="passo-n">Dica ' + (n+1) + ' de ' + TOUR.length + '</div><b>' + TOUR[n].tit + '</b><p>' + TOUR[n].txt + '</p>' +
+    '<div class="acoes"><button class="pular" id="tour-pular">Pular</button>' +
+    '<button class="btn btn-acento" id="tour-prox">' + (n === TOUR.length - 1 ? "Entendi" : "Próxima") + '</button></div>';
+  document.body.appendChild(card); tourCard = card;
+  setTimeout(function(){
+    var r = alvo.getBoundingClientRect(), ch = card.offsetHeight, cw = card.offsetWidth;
+    var topo = (r.bottom + ch + 24 < window.innerHeight) ? r.bottom + 14 : r.top - ch - 14;
+    topo = Math.min(Math.max(12, topo), window.innerHeight - ch - 12);
+    var esq = Math.min(Math.max(16, r.left), window.innerWidth - cw - 16);
+    card.style.top = topo + "px"; card.style.left = esq + "px";
+    card.querySelector("#tour-prox").focus({preventScroll:true});
+  }, 80);
+}
+document.addEventListener("click", function(e){
+  var t = e.target.closest("button"); if(!t) return;
+  if(t.id === "tour-prox"){ e.stopPropagation(); tourMostra(tourPasso + 1); }
+  else if(t.id === "tour-pular"){ e.stopPropagation(); tourFim(); }
+  else if(t.id === "btn-tour"){ e.stopPropagation(); tourMostra(0); }
+}, true);
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && tourPasso >= 0){ tourFim(); e.stopPropagation(); } }, true);
+window.addEventListener("resize", function(){ if(tourPasso >= 0) tourMostra(tourPasso); });
+
 /* ---------------- backup: baixar, restaurar e lembrar ---------------- */
 var SETE_DIAS = 7 * 86400000, TRES_DIAS = 3 * 86400000;
 
@@ -1478,7 +1618,11 @@ $("#modal-uti").addEventListener("click", function(e){ if(e.target === this) thi
 $("#btn-triar").addEventListener("click", function(e){
   e.stopPropagation();
   var campo = $("#campo"), txt = campo.value.trim();
-  if(!txt){ campo.focus(); return; }
+  if(!txt){
+    mostraToast("Escreva a tarefa antes de triar. A recepção não atende paciente invisível.", false);
+    campo.classList.remove("treme"); void campo.offsetWidth; campo.classList.add("treme");
+    campo.focus(); return;
+  }
   abreMenu(this, "Qual a cor desta tarefa?", OPS_NOVA, function(escolha){
     if(escolha === "uti"){
       if(utiCheia()){ avisaUtiCheia(); return; }
@@ -1495,6 +1639,15 @@ $("#btn-triar").addEventListener("click", function(e){
 $("#campo").addEventListener("keydown", function(e){ if(e.key === "Enter") $("#btn-triar").click(); });
 $("#btn-musica").addEventListener("click", sorteiaArtista);
 $("#btn-altas").addEventListener("click", function(){ altasAbertas = !altasAbertas; pintaAltas(); });
+function abreComoUsar(abrir){
+  var caixa = $("#como-usar");
+  var abrindo = (abrir === undefined) ? caixa.hidden : abrir;
+  caixa.hidden = !abrindo;
+  $("#btn-como-usar").setAttribute("aria-expanded", abrindo ? "true" : "false");
+  $("#rotulo-como-usar").textContent = abrindo ? "Ocultar" : "Ver como usar";
+}
+$("#btn-como-usar").addEventListener("click", function(){ abreComoUsar(); });
+$("#link-como-usar").addEventListener("click", function(){ abreComoUsar(true); });
 $("#btn-mais").addEventListener("click", function(){
   var caixa = $("#sobre-mais"), abrindo = caixa.hidden;
   caixa.hidden = !abrindo;
@@ -1584,6 +1737,7 @@ document.addEventListener("click", function(e){
 sorteiaArtista();
 if(!backup){ backup = Date.now(); salvar(); }
 pintar();
+if(!tourJaVisto()) setTimeout(function(){ tourMostra(0); }, 900);
 })();
 </script>
 </body>
